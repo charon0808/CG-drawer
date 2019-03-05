@@ -1,18 +1,21 @@
 package draw;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class CG {
 	Graphics g;
 	Frame frame;
+	BufferedImage image;
 
-	public CG(Frame f) {
+	public CG(Frame f) throws IOException {
 		frame = f;
-		g = (Graphics2D) frame.p.getGraphics();
-		g.setColor(Color.black);
+		image = ImageIO.read(new File("C:\\Users\\Xiao Li\\Desktop\\New folder\\1.png"));
 	}
 
 	private void drawPixel(Point point) {
@@ -24,5 +27,9 @@ public class CG {
 		// frame.update(g);
 		// frame.setPoint(200, 100);
 		// frame.setPoint(100, 100);
+	}
+
+	public void showImage() {
+		frame.updateImage(image);
 	}
 }
