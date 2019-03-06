@@ -1,7 +1,21 @@
 package draw;
 
+import java.awt.Point;
+
 public class Cli {
 	private String[] command;
+	private CG cg;
+
+	public Cli(CG c) {
+		cg = c;
+	}
+
+	public void updateCli(String line) {
+		command = line.split(" ");
+		if (!this.commandResolve()) {
+			System.err.println("invalid command.");
+		}
+	}
 
 	private boolean commandResolve() {
 		switch (command[0]) {
@@ -29,6 +43,15 @@ public class Cli {
 		case "drawLine": {
 			if (command.length != 7)
 				return false;
+			try {
+				int id = Integer.parseInt(command[1]);
+				cg.drawLine(new Point(Integer.parseInt(command[2]), Integer.parseInt(command[3])), // Point a
+						new Point(Integer.parseInt(command[4]), Integer.parseInt(command[5])), // Point b
+						Integer.parseInt(command[6]));// algorithm
+				cg.showImage();
+			} catch (NumberFormatException e) {
+				return false;
+			}
 			break;
 		}
 		// drawPolygon id n algorithm
@@ -76,9 +99,5 @@ public class Cli {
 			return false;
 		}
 		return true;
-	}
-
-	public Cli(String line) {
-		command = line.split(" ");
 	}
 }
