@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 
 public class Frame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public JPanel buttonPanel;
 	public JPanel canvasPanel;
 	public BufferedImage image;
@@ -29,6 +33,11 @@ public class Frame extends JFrame {
 		this.add(buttonPanel, BorderLayout.NORTH);
 
 		canvasPanel = new JPanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
