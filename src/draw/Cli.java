@@ -1,16 +1,22 @@
 package draw;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class Cli {
 	private String[] command;
+	private String commandLine;
 	private CG cg;
+
+	private ArrayList<String> al;
 
 	public Cli(CG c) {
 		cg = c;
+		al = new ArrayList<String>();
 	}
 
 	public void updateCli(String line) {
+		commandLine = line;
 		command = line.split(" ");
 		if (!this.commandResolve()) {
 			System.err.println("invalid command.");
@@ -23,20 +29,40 @@ public class Cli {
 		case "resetCanvas": {
 			if (command.length != 3)
 				return false;
-			double width = Double.valueOf(command[1].toString()); // test if command[1-2] is not a double
-			double height = Double.valueOf(command[2].toString());
+			try {
+				int width = Integer.parseInt(command[1].toString());
+				int height = Integer.parseInt(command[2].toString());
+				cg.resetCanvas(width, height);
+			} catch (NumberFormatException e) {
+				return false;
+			}
 			break;
 		}
 		// saveCanvas name
 		case "saveCanvas": {
 			if (command.length != 2)
 				return false;
+			String path;
+			if ((path = cg.saveCanvas(command[1])) == null) {
+				System.err.println("sava Canvas failed.");
+			} else {
+				System.out.println("current Canvas saved at " + path);
+			}
 			break;
 		}
 		// setColor R G B
 		case "setColor": {
 			if (command.length != 4)
 				return false;
+			try {
+				int r = Integer.parseInt(command[1]);
+				int g = Integer.parseInt(command[2]);
+				int b = Integer.parseInt(command[3]);
+				int color = ((0xFF << 24) | (r << 16) | (g << 8) | b);
+				cg.setColor(color);
+			} catch (NumberFormatException e) {
+				return false;
+			}
 			break;
 		}
 		// drawLine id x1 y1 x2 y2 algorithm
@@ -98,6 +124,7 @@ public class Cli {
 		default:
 			return false;
 		}
+		al.add(commandLine);
 		return true;
 	}
 }

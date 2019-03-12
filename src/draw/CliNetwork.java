@@ -19,7 +19,7 @@ public class CliNetwork implements Runnable {
 		ServerSocket server;
 		try {
 			server = new ServerSocket(port);
-			System.out.println("waiting for client to connect...");
+			System.out.println("waiting for client to connect 127.0.0.1:28889 ...");
 			Socket socket = server.accept();
 			System.out.println("client connect success.");
 			InputStream inputStream = socket.getInputStream();
@@ -27,8 +27,8 @@ public class CliNetwork implements Runnable {
 			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				cli.updateCli(line);
 				System.out.println("received data from client: " + line);
+				cli.updateCli(line);
 			}
 			bufferedReader.close();
 			inputStream.close();

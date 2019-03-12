@@ -2,7 +2,10 @@ package draw;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class CG {
 	private Frame frame;
@@ -11,8 +14,11 @@ public class CG {
 	private int width, height;
 	private int color;
 
-	public CG(Frame f, int w, int h) throws IOException {
+	public CG(Frame f) throws IOException {
 		frame = f;
+	}
+
+	public void resetCanvas(int w, int h) {
 		width = w;
 		height = h;
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -22,6 +28,20 @@ public class CG {
 				image.setRGB(i, j, 0xffffffff);
 			}
 		}
+		this.showImage();
+	}
+
+	public String saveCanvas(String name) {
+		try {
+			ImageIO.write(image, "bmp", new File("name.bmp"));
+			return System.getProperty("user.dir") + "name.bmp";
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	public void setColor(int c) {
+		color = c;
 	}
 
 	private void drawPixel(Point point) {
@@ -62,4 +82,5 @@ public class CG {
 	public void showImage() {
 		frame.updateImage(image);
 	}
+
 }

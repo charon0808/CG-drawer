@@ -45,6 +45,7 @@ public class Frame extends JFrame {
 			}
 		};
 		this.add(canvasPanel, BorderLayout.CENTER);
+		this.setBackground(Color.WHITE);
 
 		this.setSize(900, 600);
 		this.setTitle("CG-drawer");
