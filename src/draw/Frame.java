@@ -2,6 +2,7 @@ package draw;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -26,11 +27,16 @@ public class Frame extends JFrame {
 		b1 = new JButton("test1");
 		b2 = new JButton("test2");
 		b3 = new JButton("test3");
+
+		b1.setPreferredSize(new Dimension(80, 30));
+		b2.setPreferredSize(new Dimension(80, 30));
+		b3.setPreferredSize(new Dimension(80, 30));
+
 		buttonPanel.add(b1);
 		buttonPanel.add(b2);
 		buttonPanel.add(b3);
 		buttonPanel.setBackground(Color.white);
-		this.add(buttonPanel, BorderLayout.NORTH);
+		// this.add(buttonPanel, BorderLayout.NORTH);
 
 		canvasPanel = new JPanel() {
 			/**
@@ -46,10 +52,9 @@ public class Frame extends JFrame {
 		};
 		this.add(canvasPanel, BorderLayout.CENTER);
 		this.setBackground(Color.WHITE);
-
 		this.setSize(900, 600);
 		this.setTitle("CG-drawer");
-		this.setLocation(700, 500);
+		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(true);
 		this.setVisible(true);
