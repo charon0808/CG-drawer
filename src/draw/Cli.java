@@ -2,28 +2,69 @@ package draw;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Cli {
 	private String[] command;
 	private String commandLine;
 	private CG cg;
 	private String errInfo;
+	private int lastColor;
+	private boolean reDrawFlag;
 
-	private HashMap<Integer, String> shapes;
+	private HashMap<Integer, String[]> shapes;
+	private HashMap<Integer, Integer> shapesColor;
 
 	public Cli(CG c) {
 		cg = c;
 		shapes = new HashMap<>();
+		shapesColor = new HashMap<>();
+		reDrawFlag = false;
+		cg.setCli(this);
 	}
 
 	public void updateCli(String line) {
+		errInfo = null;
 		commandLine = line;
-		command = line.split(" ");
+		command = line.split("\\s+");
 		if (!this.commandResolve()) {
 			if (errInfo == null)
 				System.err.println("command cannot be resolved");
 			else
 				System.err.println("wrong parameters for command " + errInfo);
+		}
+	}
+
+	public void updateCli(String[] cmd) {
+		command = cmd.clone();
+		if (!this.commandResolve()) {
+			if (errInfo == null)
+				System.err.println("command cannot be resolved");
+			else
+				System.err.println("wrong parameters for command " + errInfo);
+		}
+	}
+
+	public void redraw() {
+		reDrawFlag = true;
+		cg.clearCanvas();
+		for (Entry<Integer, String[]> entry : shapes.entrySet()) {
+			cg.setColor(shapesColor.get(entry.getKey()));
+			updateCli(entry.getValue());
+		}
+		cg.setColor(lastColor);
+		reDrawFlag = false;
+	}
+
+	private boolean shapesPut(int id) {
+		if (reDrawFlag)
+			return true;
+		if (shapes.containsKey(id)) {
+			return false;
+		} else {
+			shapes.put(id, command);
+			shapesColor.put(id, cg.getColor());
+			return true;
 		}
 	}
 
@@ -70,6 +111,7 @@ public class Cli {
 				int g = Integer.parseInt(command[2]);
 				int b = Integer.parseInt(command[3]);
 				int color = ((0xFF << 24) | (r << 16) | (g << 8) | b);
+				lastColor = color;
 				cg.setColor(color);
 			} catch (NumberFormatException e) {
 				errInfo = "drawPolygon.\nR, G and B values must be integers";
@@ -95,10 +137,13 @@ public class Cli {
 						command[6]);// algorithm
 				cg.showImage();
 			} catch (NumberFormatException e) {
-				errInfo = "drawPolygon.\n id and coordinate values must be integers";
+				errInfo = "drawLine.\nid and coordinate values must be integers";
 				return false;
 			}
-			shapes.put(id, commandLine);
+			if (!shapesPut(id)) {
+				errInfo = "drawLine.\nid:" + id + " already existed.";
+				return false;
+			}
 			break;
 		}
 		/*
@@ -106,14 +151,14 @@ public class Cli {
 		 */
 		case "drawPolygon": {
 			if (command.length <= 4) {
-				errInfo = "drawPolygon.\nUsage: drawLine id x1 y1 x2 y2 [ DDA | Bresenham default = DDA]";
+				errInfo = "drawPolygon.\nUsage: drawPolygon id n [ DDA | Bresenham default = DDA] x1 y1 x2 y2 ... xn yn";
 				return false;
 			}
 			int id;
 			try {
 				int n = Integer.parseInt(command[2]);
 				if (command.length != 4 + 2 * n) {
-					errInfo = "drawPolygon.\nUsage: drawLine id x1 y1 x2 y2 [ DDA | Bresenham default = DDA]";
+					errInfo = "drawPolygon.\nUsage: drawPolygon id n [ DDA | Bresenham default = DDA] x1 y1 x2 y2 ... xn yn";
 					return false;
 				}
 				id = Integer.parseInt(command[1]);
@@ -128,13 +173,29 @@ public class Cli {
 				errInfo = "drawPolygon.\nid , n and coordinate values must be integers";
 				return false;
 			}
-			shapes.put(id, commandLine);
+			if (!shapesPut(id)) {
+				errInfo = "drawLine.\nid:" + id + " already existed.";
+				return false;
+			}
 			break;
 		}
 		// drawEllipse id x y rx ry
 		case "drawEllipse": {
 			if (command.length != 6)
 				return false;
+			int id;
+			try {
+				id = Integer.parseInt(command[1]);
+				cg.drawEllipse(new Point(Integer.parseInt(command[2]), Integer.parseInt(command[3])),
+						Integer.parseInt(command[4]), Integer.parseInt(command[5]));
+			} catch (NumberFormatException e) {
+				errInfo = "drawEllipse.\nid , x, y, rx and ry values must be integers";
+				return false;
+			}
+			if (!shapesPut(id)) {
+				errInfo = "drawLine.\nid:" + id + " already existed.";
+				return false;
+			}
 			break;
 		}
 		// drawCurve id n algorithm x1 y1 x2 y2 бн xn yn
@@ -146,6 +207,51 @@ public class Cli {
 		case "translate": {
 			if (command.length != 4)
 				return false;
+			String[] tranCommand;
+			int dx, dy;
+			try {
+				int nn = Integer.parseInt(command[1]);
+				if (!shapes.containsKey(nn)) {
+					errInfo = "translate.\nid:" + nn + " does not exists.";
+					return false;
+				}
+				tranCommand = shapes.get(nn);
+				dx = Integer.parseInt(command[2]);
+				dy = Integer.parseInt(command[3]);
+			} catch (NumberFormatException e) {
+				errInfo = "translate.\nid, dx and dy values must be integers";
+				return false;
+			}
+			switch (tranCommand[0]) {
+			case "drawLine": {
+				tranCommand[2] = Integer.toString((Integer.parseInt(tranCommand[2]) + dx));
+				tranCommand[3] = Integer.toString((Integer.parseInt(tranCommand[3]) + dy));
+				tranCommand[4] = Integer.toString((Integer.parseInt(tranCommand[4]) + dx));
+				tranCommand[5] = Integer.toString((Integer.parseInt(tranCommand[5]) + dy));
+				break;
+			}
+			case "drawPolygon": {
+				int n = Integer.parseInt(tranCommand[2]);
+				for (int i = 0; i < n; i++) {
+					tranCommand[4 + 2 * i] = Integer.toString(Integer.parseInt(tranCommand[4 + 2 * i]) + dx);
+					tranCommand[4 + 2 * i + 1] = Integer.toString(Integer.parseInt(tranCommand[4 + 2 * i + 1]) + dy);
+				}
+				break;
+			}
+			case "drawEllipse": {
+				// TODO:
+				break;
+			}
+			case "drawCurve": {
+				// TODO:
+				break;
+			}
+			default: {
+				errInfo = "translate.\n";
+				return false;
+			}
+			}
+			redraw();
 			break;
 		}
 		// rotate id x y r

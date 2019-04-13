@@ -13,35 +13,80 @@ public class CG {
 
 	private int width, height;
 	private int color;
+	private Cli cli;
 
 	public CG(Frame f) throws IOException {
 		frame = f;
+		frame.setCG(this);
+		frame.InitFrame();
+	}
+
+	public void setCli(Cli cc) {
+		cli = cc;
+	}
+
+	public Cli getCli() {
+		return cli;
 	}
 
 	public void resetCanvas(int w, int h) {
 		width = w;
 		height = h;
 		image = new BufferedImage(width, height + 1, BufferedImage.TYPE_INT_RGB);
-		color = 0;
+		setColor(0);
+		clearCanvas();
+	}
+
+	public void clearCanvas() {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height + 1; j++) {
 				image.setRGB(i, j, 0xffffffff);
 			}
 		}
+		// drawDashs();
 		this.showImage();
 	}
 
 	public String saveCanvas(String name) {
 		try {
-			ImageIO.write(image, "bmp", new File(name));
-			return System.getProperty("user.dir") + "\\" + name;
+			ImageIO.write(image, "bmp", new File(name + ".bmp"));
+			return System.getProperty("user.dir") + "\\" + name + ".bmp";
 		} catch (IOException e) {
 			return null;
 		}
 	}
 
+	public void setColor(int r, int g, int b) {
+		color = (0xFF << 24) | (r << 16) | (g << 8) | b;
+		frame.setSlider(r, g, b);
+	}
+
 	public void setColor(int c) {
 		color = c;
+		frame.setSlider((c & 0xff0000) >> 16, (c & 0xff00) >> 8, c & 0xff);
+	}
+
+	public void setImage(BufferedImage bufferedImage) {
+		image = bufferedImage;
+		width = image.getWidth();
+		height = image.getHeight();
+		showImage();
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	public void drawDashs() {
@@ -164,6 +209,14 @@ public class CG {
 			this.drawLine(points[i], points[i + 1], algorithm);
 		}
 		this.drawLine(points[0], points[points.length - 1], algorithm);
+	}
+
+	public void drawEllipse(Point center, int rx, int ry) {
+
+	}
+
+	public Point translate(Point a, int xx, int yy) {
+		return new Point(a.x + xx, a.y + yy);
 	}
 
 	public void showImage() {
