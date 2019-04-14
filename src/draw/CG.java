@@ -103,9 +103,7 @@ public class CG {
 	}
 
 	private void drawPixel(Point point) {
-		// System.out.println("drawPixel, x= " + point.x + ", height - y=" + (height -
-		// point.y));
-		if (point.x < width && point.y < height) {
+		if (point.x < width && point.y < height && point.y < height) {
 			image.setRGB(point.x, height - point.y, color);
 		}
 	}
@@ -152,7 +150,9 @@ public class CG {
 		}
 	}
 
-	private void drawLineBresenham(Point a, Point b) {
+	private void drawLineBresenham(Point a, Point b) { // 73 230 174 77
+		// System.err.println(String.format("drawLine from (%d, %d) to (%d, %d)", a.x,
+		// a.y, b.x, b.y));
 		if (Math.abs(b.y - a.y) < Math.abs(b.x - a.x)) {
 			if (a.x > b.x) {
 				Point tmp = a;
@@ -169,7 +169,7 @@ public class CG {
 			int D = 2 * dy - dx;
 			int y = a.y;
 
-			for (int x = a.x; y < b.x; x++) {
+			for (int x = a.x; x < b.x; x++) {
 				this.drawPixel(new Point(x, y));
 				if (D > 0) {
 					y = y + yi;

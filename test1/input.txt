@@ -1,0 +1,13 @@
+resetCanvas 100 100
+setColor 255 0 0
+drawLine 5 7 39 93 71 Naive
+saveCanvas output_1
+setColor 0 162 232
+drawLine 233 96 35 15 58 Naive
+saveCanvas output_2
+setColor 0 0 0
+drawPolygon 666 6 Naive
+44 22 73 30 74 77 59 56 32 63 25 49
+saveCanvas output_3
+translate 666 -8 -18
+saveCanvas output_4

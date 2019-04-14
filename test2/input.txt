@@ -1,0 +1,13 @@
+resetCanvas 500 500
+setColor 255 50 60
+drawPolygon 666 6 Bresenham
+440 22 73 230 174 77 259 256 232 163 225 249
+saveCanvas output_1
+setColor 100 162 232
+drawLine 233 96 35 15 58 DDA
+saveCanvas output_2
+setColor 0 0 0
+drawLine 123 123 234 345 451 Bresenham
+saveCanvas output_3
+translate 666 38 -22
+saveCanvas output_4
