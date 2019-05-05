@@ -1,5 +1,7 @@
 package draw;
 
+import Jama.Matrix;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,15 +15,12 @@ public class CG {
     private int width, height;
     private int color;
     private Cli cli;
-    private int rotate_x;
-    private int rotate_y;
-    private int rotate_r;
+    private int currentId;
 
     public CG(Frame f) throws IOException {
         frame = f;
         frame.setCG(this);
         frame.InitFrame();
-        this.setRotate_r(0x7fffffff);
     }
 
     public Cli getCli() {
@@ -105,7 +104,18 @@ public class CG {
         }
     }
 
+    private Point rotate(Point point) {
+        double[][] p = {{point.x, point.y, 1}};
+        Matrix rotateMatrix = (new Matrix(p)).times(cli.rotateMsg.get(currentId));
+        return new Point((int) rotateMatrix.get(0, 0), (int) rotateMatrix.get(0, 1));
+    }
+
     private void drawPixel(Point point) {
+        if (cli.rotateMsg.containsKey(currentId)) {
+            System.out.printf("before rotate, x=%d, y=%d\n", point.x, point.y);
+            point = rotate(point);
+            System.out.printf("after rotate, x=%d, y=%d\n", point.x, point.y);
+        }
         if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
@@ -263,27 +273,11 @@ public class CG {
         frame.updateImage(image);
     }
 
-    public int getRotate_x(){
-        return rotate_x;
+    public int getCurrentId() {
+        return currentId;
     }
 
-    public void setRotate_x(int rotate_x) {
-        this.rotate_x = rotate_x;
-    }
-
-    public void setRotate_y(int rotate_y) {
-        this.rotate_y = rotate_y;
-    }
-
-    public void setRotate_r(int rotate_r) {
-        this.rotate_r = rotate_r;
-    }
-
-    public int getRotate_y() {
-        return rotate_y;
-    }
-
-    public int getRotate_r() {
-        return rotate_r;
+    public void setCurrentId(int currentId) {
+        this.currentId = currentId;
     }
 }

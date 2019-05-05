@@ -1,5 +1,8 @@
 package draw;
 
+
+import Jama.Matrix;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -14,11 +17,13 @@ public class Cli {
 
     private HashMap<Integer, String[]> shapes;
     private HashMap<Integer, Integer> shapesColor;
+    public HashMap<Integer, Matrix> rotateMsg;
 
     public Cli(CG c) {
         cg = c;
         shapes = new HashMap<>();
         shapesColor = new HashMap<>();
+        rotateMsg = new HashMap<>();
         reDrawFlag = false;
         cg.setCli(this);
     }
@@ -130,14 +135,14 @@ public class Cli {
                 int id;
                 try {
                     id = Integer.parseInt(command[1]);
-                    cg.drawLine(new Point(Integer.parseInt(command[2]), Integer.parseInt(command[3])), // Point
-                            // a
-                            new Point(Integer.parseInt(command[4]), Integer.parseInt(command[5])), // Point
-                            // b
+                    cg.setCurrentId(id);
+                    cg.drawLine(new Point((int) Double.parseDouble(command[2]), (int) Double.parseDouble(command[3])), // Point a
+                            new Point((int) Double.parseDouble(command[4]), (int) Double.parseDouble(command[5])), // Point b
                             command[6]);// algorithm
+                    cg.setCurrentId(0x7fffffff);
                     cg.showImage();
                 } catch (NumberFormatException e) {
-                    errInfo = "drawLine.\nid and coordinate values must be integers";
+                    errInfo = "drawLine.\nid values must be integers and coordinate values must be float number";
                     return false;
                 }
                 if (!shapesPut(id)) {
@@ -164,10 +169,12 @@ public class Cli {
                     id = Integer.parseInt(command[1]);
                     Point[] points = new Point[n];
                     for (int i = 0; i < n; i++) {
-                        points[i] = new Point(Integer.parseInt(command[4 + 2 * i]),
-                                Integer.parseInt(command[4 + 2 * i + 1]));
+                        points[i] = new Point((int) Double.parseDouble(command[4 + 2 * i]),
+                                (int) Double.parseDouble(command[4 + 2 * i + 1]));
                     }
+                    cg.setCurrentId(id);
                     cg.drawPloygon(points, command[3]);
+                    cg.setCurrentId(0x7fffffff);
                     cg.showImage();
                 } catch (NumberFormatException e) {
                     errInfo = "drawPolygon.\nid , n and coordinate values must be integers";
@@ -186,15 +193,17 @@ public class Cli {
                 int id;
                 try {
                     id = Integer.parseInt(command[1]);
-                    cg.drawEllipse(new Point(Integer.parseInt(command[2]), Integer.parseInt(command[3])),
-                            Integer.parseInt(command[4]), Integer.parseInt(command[5]));
+                    cg.setCurrentId(id);
+                    cg.drawEllipse(new Point((int) Double.parseDouble(command[2]), (int) Double.parseDouble(command[3])),
+                            (int) Double.parseDouble(command[4]), (int) Double.parseDouble(command[5]));
+                    cg.setCurrentId(0x7fffffff);
                     cg.showImage();
                 } catch (NumberFormatException e) {
-                    errInfo = "drawEllipse.\nid , x, y, rx and ry values must be integers";
+                    errInfo = "drawEllipse.\nid , x, y, rx and ry values must be float number";
                     return false;
                 }
                 if (!shapesPut(id)) {
-                    errInfo = "drawLine.\nid:" + id + " already existed.";
+                    errInfo = "drawEllipse.\nid:" + id + " already existed.";
                     return false;
                 }
                 break;
@@ -217,25 +226,25 @@ public class Cli {
                         return false;
                     }
                     tranCommand = shapes.get(nn);
-                    dx = Integer.parseInt(command[2]);
-                    dy = Integer.parseInt(command[3]);
+                    dx = (int) Double.parseDouble(command[2]);
+                    dy = (int) Double.parseDouble(command[3]);
                 } catch (NumberFormatException e) {
-                    errInfo = "translate.\nid, dx and dy values must be integers";
+                    errInfo = "translate.\nid values must be integers and dx and dy values must be float number.";
                     return false;
                 }
                 switch (tranCommand[0]) {
                     case "drawLine": {
-                        tranCommand[2] = Integer.toString((Integer.parseInt(tranCommand[2]) + dx));
-                        tranCommand[3] = Integer.toString((Integer.parseInt(tranCommand[3]) + dy));
-                        tranCommand[4] = Integer.toString((Integer.parseInt(tranCommand[4]) + dx));
-                        tranCommand[5] = Integer.toString((Integer.parseInt(tranCommand[5]) + dy));
+                        tranCommand[2] = Integer.toString(((int) Double.parseDouble(tranCommand[2]) + dx));
+                        tranCommand[3] = Integer.toString(((int) Double.parseDouble(tranCommand[3]) + dy));
+                        tranCommand[4] = Integer.toString(((int) Double.parseDouble(tranCommand[4]) + dx));
+                        tranCommand[5] = Integer.toString(((int) Double.parseDouble(tranCommand[5]) + dy));
                         break;
                     }
                     case "drawPolygon": {
                         int n = Integer.parseInt(tranCommand[2]);
                         for (int i = 0; i < n; i++) {
-                            tranCommand[4 + 2 * i] = Integer.toString(Integer.parseInt(tranCommand[4 + 2 * i]) + dx);
-                            tranCommand[4 + 2 * i + 1] = Integer.toString(Integer.parseInt(tranCommand[4 + 2 * i + 1]) + dy);
+                            tranCommand[4 + 2 * i] = Integer.toString((int) Double.parseDouble(tranCommand[4 + 2 * i]) + dx);
+                            tranCommand[4 + 2 * i + 1] = Integer.toString((int) Double.parseDouble(tranCommand[4 + 2 * i + 1]) + dy);
                         }
                         break;
                     }
@@ -259,6 +268,23 @@ public class Cli {
             case "rotate": {
                 if (command.length != 5)
                     return false;
+                int id;
+                try {
+                    id = Integer.parseInt(command[1]);
+                    int x = (int) Double.parseDouble(command[2]);
+                    int y = (int) Double.parseDouble(command[3]);
+                    int r = Integer.parseInt(command[4]);
+                    Matrix currentMatrix = rotateMatrix(x, y, r);
+                    if (rotateMsg.containsKey(id)) {
+                        Matrix matrix = rotateMsg.get(id);
+                        rotateMsg.replace(id, matrix.times(currentMatrix));
+                    } else {
+                        rotateMsg.put(id, currentMatrix);
+                    }
+                    redraw();
+                } catch (NumberFormatException e) {
+                    errInfo = "rotate.\nid and r must be integer and x and y must be float number.";
+                }
                 break;
             }
             // scale id x y s
@@ -278,5 +304,12 @@ public class Cli {
             }
         }
         return true;
+    }
+
+    private Matrix rotateMatrix(int x, int y, int r) {
+        double[][] a = {{1, 0, 0}, {0, 1, 0}, {(double) -x, (double) -y, 1}};
+        double[][] b = {{Math.cos(r), Math.sin(r), 0}, {-Math.sin(r), Math.cos(r), 0}, {0, 0, 1}};
+        double[][] c = {{1, 0, 0}, {0, 1, 0}, {(double) x, (double) y, 1}};
+        return ((new Matrix(a)).times(new Matrix(b))).times(new Matrix(c));
     }
 }
