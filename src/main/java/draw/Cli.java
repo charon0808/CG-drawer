@@ -188,6 +188,7 @@ public class Cli {
                     id = Integer.parseInt(command[1]);
                     cg.drawEllipse(new Point(Integer.parseInt(command[2]), Integer.parseInt(command[3])),
                             Integer.parseInt(command[4]), Integer.parseInt(command[5]));
+                    cg.showImage();
                 } catch (NumberFormatException e) {
                     errInfo = "drawEllipse.\nid , x, y, rx and ry values must be integers";
                     return false;

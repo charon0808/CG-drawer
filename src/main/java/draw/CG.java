@@ -1,7 +1,5 @@
 package draw;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,11 +13,15 @@ public class CG {
     private int width, height;
     private int color;
     private Cli cli;
+    private int rotate_x;
+    private int rotate_y;
+    private int rotate_r;
 
     public CG(Frame f) throws IOException {
         frame = f;
         frame.setCG(this);
         frame.InitFrame();
+        this.setRotate_r(0x7fffffff);
     }
 
     public Cli getCli() {
@@ -103,13 +105,13 @@ public class CG {
         }
     }
 
-    private void drawPixel(@org.jetbrains.annotations.NotNull Point point) {
-        if (point.x < width && point.y < height && point.y < height) {
+    private void drawPixel(Point point) {
+        if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
     }
 
-    public void drawLine(Point a, Point b, @NotNull String algorithm) {
+    public void drawLine(Point a, Point b, String algorithm) {
         if (algorithm.equals("Bresenham")) {
             drawLineBresenham(a, b);
         } else {
@@ -212,8 +214,45 @@ public class CG {
         this.drawLine(points[0], points[points.length - 1], algorithm);
     }
 
-    public void drawEllipse(Point center, int rx, int ry) {
+    private void ellipseDraw4Points(Point center, int x, int y) {
+        this.drawPixel(new Point(center.x + x, center.y + y));
+        this.drawPixel(new Point(center.x + x, center.y - y));
+        this.drawPixel(new Point(center.x - x, center.y + y));
+        this.drawPixel(new Point(center.x - x, center.y - y));
+    }
 
+    public void drawEllipse(Point center, int rx, int ry) {
+        int rx2 = rx * rx;
+        int ry2 = ry * ry;
+        double pk = ry2 - rx2 * (ry - 1.0 / 4.0);
+        int x = 0, y = ry;
+        System.out.printf("center.x = %d, center.y = %d, rx = %d, ry = %d\n", center.x, center.y, rx, ry);
+        while (ry2 * x < rx2 * y) {
+            //System.out.println("[DEBUG] in drawEllipse, x= " + x + ", y= " + y);
+            if (pk < 0) {
+                pk = pk + (ry2 * ((2 * x) + 3));
+                x++;
+            } else {
+                pk = pk + (ry2 * ((2 * x) + 3)) + (rx2 * ((-2 * y) + 2));
+                x++;
+                y--;
+            }
+            this.ellipseDraw4Points(center, x, y);
+        }
+        pk = ry2 * Math.pow(x + 1.0 / 2.0, 2) + rx2 * (y - 1) - rx2 * ry2;
+        while (y >= 0) {
+            if (pk > 0) {
+                //pk = pk - 2 * rx2 * (y + 1) - rx2;
+                pk += rx2 * ((-2 * y) + 3);
+                y--;
+            } else {
+                //pk = pk + 2 * ry2 * (x + 1) - 2 * rx2 * (y + 1) - rx2;
+                pk += (rx2 * ((-2 * y) + 3)) + (rx2 * ((2 * x) + 2));
+                x++;
+                y--;
+            }
+            this.ellipseDraw4Points(center, x, y);
+        }
     }
 
     public Point translate(Point a, int xx, int yy) {
@@ -224,4 +263,27 @@ public class CG {
         frame.updateImage(image);
     }
 
+    public int getRotate_x(){
+        return rotate_x;
+    }
+
+    public void setRotate_x(int rotate_x) {
+        this.rotate_x = rotate_x;
+    }
+
+    public void setRotate_y(int rotate_y) {
+        this.rotate_y = rotate_y;
+    }
+
+    public void setRotate_r(int rotate_r) {
+        this.rotate_r = rotate_r;
+    }
+
+    public int getRotate_y() {
+        return rotate_y;
+    }
+
+    public int getRotate_r() {
+        return rotate_r;
+    }
 }

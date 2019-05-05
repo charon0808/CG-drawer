@@ -75,16 +75,28 @@ public class Listener extends MouseAdapter implements ActionListener {
         // System.err.println("end point x=" + e.getX() + ", y=" + (cg.getHeight() -
         // e.getY()));
         if (checkArrayList()) {
-            if (currentShape.equals("line")) {
-                String command = String.format("drawLine %d %d %d %d %d %s", drawID--, arrayList.get(0).x,
-                        arrayList.get(0).y, arrayList.get(1).x, arrayList.get(1).y, "navie");
-                cg.getCli().updateCli(command);
-            } else if (currentShape.equals("rectangle")) { // drawPolygon id n algorithm x1 y1 x2 y2 ... xn yn
-                Point aPoint = arrayList.get(0);
-                Point bPoint = arrayList.get(1);
-                String command = String.format("drawPolygon %d %d %s %d %d %d %d %d %d %d %d", drawID--, 4, "naive",
-                        aPoint.x, aPoint.y, aPoint.x, bPoint.y, bPoint.x, bPoint.y, bPoint.x, aPoint.y);
-                cg.getCli().updateCli(command);
+            switch (currentShape) {
+                case "line": {
+                    String command = String.format("drawLine %d %d %d %d %d %s", drawID--, arrayList.get(0).x,
+                            arrayList.get(0).y, arrayList.get(1).x, arrayList.get(1).y, "navie");
+                    cg.getCli().updateCli(command);
+                    break;
+                }
+                case "rectangle": { // drawPolygon id n algorithm x1 y1 x2 y2 ... xn yn
+                    Point aPoint = arrayList.get(0);
+                    Point bPoint = arrayList.get(1);
+                    String command = String.format("drawPolygon %d %d %s %d %d %d %d %d %d %d %d", drawID--, 4, "naive",
+                            aPoint.x, aPoint.y, aPoint.x, bPoint.y, bPoint.x, bPoint.y, bPoint.x, aPoint.y);
+                    cg.getCli().updateCli(command);
+                    break;
+                }
+                case "Ellipse":
+                    Point aPoint = arrayList.get(0);
+                    Point bPoint = arrayList.get(1);
+                    // drawEllipse id x y rx ry
+                    String command = String.format("drawEllipse %d %d %d %d %d", drawID--, (aPoint.x + bPoint.x) / 2, (aPoint.y + bPoint.y) / 2, Math.abs(aPoint.x - bPoint.x) / 2, Math.abs(aPoint.y - bPoint.y) / 2);
+                    cg.getCli().updateCli(command);
+                    break;
             }
         }
         arrayList.clear();
