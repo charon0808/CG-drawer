@@ -17,21 +17,21 @@ public class CG {
     private Cli cli;
     private int currentId;
 
-    public CG(Frame f) throws IOException {
+    CG(Frame f) throws IOException {
         frame = f;
         frame.setCG(this);
         frame.InitFrame();
     }
 
-    public Cli getCli() {
+    Cli getCli() {
         return cli;
     }
 
-    public void setCli(Cli cc) {
+    void setCli(Cli cc) {
         cli = cc;
     }
 
-    public void resetCanvas(int w, int h) {
+    void resetCanvas(int w, int h) {
         width = w;
         height = h;
         image = new BufferedImage(width, height + 1, BufferedImage.TYPE_INT_RGB);
@@ -39,7 +39,7 @@ public class CG {
         clearCanvas();
     }
 
-    public void clearCanvas() {
+    void clearCanvas() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height + 1; j++) {
                 image.setRGB(i, j, 0xffffffff);
@@ -49,7 +49,7 @@ public class CG {
         this.showImage();
     }
 
-    public String saveCanvas(String name) {
+    String saveCanvas(String name) {
         try {
             ImageIO.write(image, "bmp", new File(name + ".bmp"));
             return System.getProperty("user.dir") + "\\" + name + ".bmp";
@@ -58,33 +58,33 @@ public class CG {
         }
     }
 
-    public void setColor(int r, int g, int b) {
+    void setColor(int r, int g, int b) {
         color = (0xFF << 24) | (r << 16) | (g << 8) | b;
         frame.setSlider(r, g, b);
     }
 
-    public int getColor() {
+    int getColor() {
         return color;
     }
 
-    public void setColor(int c) {
+    void setColor(int c) {
         color = c;
         frame.setSlider((c & 0xff0000) >> 16, (c & 0xff00) >> 8, c & 0xff);
     }
 
-    public int getHeight() {
+    int getHeight() {
         return height;
     }
 
-    public int getWidth() {
+    int getWidth() {
         return width;
     }
 
-    public BufferedImage getImage() {
+    BufferedImage getImage() {
         return image;
     }
 
-    public void setImage(BufferedImage bufferedImage) {
+    void setImage(BufferedImage bufferedImage) {
         image = bufferedImage;
         width = image.getWidth();
         height = image.getHeight();
@@ -121,7 +121,7 @@ public class CG {
         }
     }
 
-    public void drawLine(Point a, Point b, String algorithm) {
+    void drawLine(Point a, Point b, String algorithm) {
         if (algorithm.equals("Bresenham")) {
             drawLineBresenham(a, b);
         } else {
@@ -217,7 +217,7 @@ public class CG {
         }
     }
 
-    public void drawPloygon(Point[] points, String algorithm) {
+    void drawPloygon(Point[] points, String algorithm) {
         for (int i = 0; i < points.length - 1; i++) {
             this.drawLine(points[i], points[i + 1], algorithm);
         }
@@ -231,10 +231,10 @@ public class CG {
         this.drawPixel(new Point(center.x - x, center.y - y));
     }
 
-    public void drawEllipse(Point center, int rx, int ry) {
+    void drawEllipse(Point center, int rx, int ry) {
         int rx2 = rx * rx;
         int ry2 = ry * ry;
-        double pk = ry2 - rx2 * (ry - 1.0 / 4.0);
+        double pk = ry2 - rx2 * (ry - 0.25);
         int x = 0, y = ry;
         System.out.printf("center.x = %d, center.y = %d, rx = %d, ry = %d\n", center.x, center.y, rx, ry);
         while (ry2 * x < rx2 * y) {
@@ -249,7 +249,7 @@ public class CG {
             }
             this.ellipseDraw4Points(center, x, y);
         }
-        pk = ry2 * Math.pow(x + 1.0 / 2.0, 2) + rx2 * (y - 1) - rx2 * ry2;
+        pk = ry2 * Math.pow((double) x + 0.5, 2) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
         while (y >= 0) {
             if (pk > 0) {
                 //pk = pk - 2 * rx2 * (y + 1) - rx2;
@@ -257,7 +257,7 @@ public class CG {
                 y--;
             } else {
                 //pk = pk + 2 * ry2 * (x + 1) - 2 * rx2 * (y + 1) - rx2;
-                pk += (rx2 * ((-2 * y) + 3)) + (rx2 * ((2 * x) + 2));
+                pk += (rx2 * ((-2 * y) + 3)) + (ry2 * ((2 * x) + 2));
                 x++;
                 y--;
             }
@@ -269,7 +269,7 @@ public class CG {
         return new Point(a.x + xx, a.y + yy);
     }
 
-    public void showImage() {
+    void showImage() {
         frame.updateImage(image);
     }
 
@@ -277,7 +277,7 @@ public class CG {
         return currentId;
     }
 
-    public void setCurrentId(int currentId) {
+    void setCurrentId(int currentId) {
         this.currentId = currentId;
     }
 }

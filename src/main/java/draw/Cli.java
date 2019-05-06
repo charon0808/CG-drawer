@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class Cli {
+class Cli {
     private String[] command;
     private String commandLine;
     private CG cg;
@@ -17,9 +17,9 @@ public class Cli {
 
     private HashMap<Integer, String[]> shapes;
     private HashMap<Integer, Integer> shapesColor;
-    public HashMap<Integer, Matrix> rotateMsg;
+    HashMap<Integer, Matrix> rotateMsg;
 
-    public Cli(CG c) {
+    Cli(CG c) {
         cg = c;
         shapes = new HashMap<>();
         shapesColor = new HashMap<>();
