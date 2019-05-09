@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class CG {
     private Frame frame;
@@ -45,7 +46,7 @@ public class CG {
                 image.setRGB(i, j, 0xffffffff);
             }
         }
-        // drawDashs();
+        this.drawDashs();
         this.showImage();
     }
 
@@ -104,17 +105,24 @@ public class CG {
         }
     }
 
-    private Point rotate(Point point) {
+    private Point rotateOrScale(Point point, String type) {
+        HashMap tmpMap;
+        if (type.equals("rotate")) {
+            tmpMap = cli.rotateMsg;
+        } else tmpMap = cli.scaleMsg;
         double[][] p = {{point.x, point.y, 1}};
-        Matrix rotateMatrix = (new Matrix(p)).times(cli.rotateMsg.get(currentId));
-        return new Point((int) rotateMatrix.get(0, 0), (int) rotateMatrix.get(0, 1));
+        Matrix matrix = (new Matrix(p)).times((Matrix) tmpMap.get(currentId));
+        return new Point((int) matrix.get(0, 0), (int) matrix.get(0, 1));
     }
 
     private void drawPixel(Point point) {
-        if (cli.rotateMsg.containsKey(currentId)) {
-            System.out.printf("before rotate, x=%d, y=%d\n", point.x, point.y);
-            point = rotate(point);
-            System.out.printf("after rotate, x=%d, y=%d\n", point.x, point.y);
+        if (cli != null && cli.rotateMsg.containsKey(currentId)) {
+            //System.out.printf("before rotate, x=%d, y=%d\n", point.x, point.y);
+            point = rotateOrScale(point, "rotate");
+            //System.out.printf("after rotate, x=%d, y=%d\n", point.x, point.y);
+        }
+        if (cli != null && cli.scaleMsg.containsKey(currentId)) {
+            point = rotateOrScale(point, "scale");
         }
         if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
@@ -236,7 +244,7 @@ public class CG {
         int ry2 = ry * ry;
         double pk = ry2 - rx2 * (ry - 0.25);
         int x = 0, y = ry;
-        System.out.printf("center.x = %d, center.y = %d, rx = %d, ry = %d\n", center.x, center.y, rx, ry);
+        //System.out.printf("center.x = %d, center.y = %d, rx = %d, ry = %d\n", center.x, center.y, rx, ry);
         while (ry2 * x < rx2 * y) {
             //System.out.println("[DEBUG] in drawEllipse, x= " + x + ", y= " + y);
             if (pk < 0) {

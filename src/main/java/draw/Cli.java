@@ -18,12 +18,14 @@ class Cli {
     private HashMap<Integer, String[]> shapes;
     private HashMap<Integer, Integer> shapesColor;
     HashMap<Integer, Matrix> rotateMsg;
+    HashMap<Integer, Matrix> scaleMsg;
 
     Cli(CG c) {
         cg = c;
         shapes = new HashMap<>();
         shapesColor = new HashMap<>();
         rotateMsg = new HashMap<>();
+        scaleMsg = new HashMap<>();
         reDrawFlag = false;
         cg.setCli(this);
     }
@@ -291,6 +293,23 @@ class Cli {
             case "scale": {
                 if (command.length != 5)
                     return false;
+                int id;
+                try {
+                    id = Integer.parseInt(command[1]);
+                    int x = (int) Double.parseDouble(command[2]);
+                    int y = (int) Double.parseDouble(command[3]);
+                    double s = Double.parseDouble(command[4]);
+                    Matrix currentMatrix = scaleMatrix(x, y, s, s);
+                    if (scaleMsg.containsKey(id)) {
+                        Matrix matrix = scaleMsg.get(id);
+                        scaleMsg.replace(id, matrix.times(currentMatrix));
+                    } else {
+                        scaleMsg.put(id, currentMatrix);
+                    }
+                    redraw();
+                } catch (NumberFormatException e) {
+                    errInfo = "scale.\nid and s must be integer and x and y must be float number.";
+                }
                 break;
             }
             // clip id x1 y1 x2 y2 algorithm
@@ -309,6 +328,13 @@ class Cli {
     private Matrix rotateMatrix(int x, int y, int r) {
         double[][] a = {{1, 0, 0}, {0, 1, 0}, {(double) -x, (double) -y, 1}};
         double[][] b = {{Math.cos(r), Math.sin(r), 0}, {-Math.sin(r), Math.cos(r), 0}, {0, 0, 1}};
+        double[][] c = {{1, 0, 0}, {0, 1, 0}, {(double) x, (double) y, 1}};
+        return ((new Matrix(a)).times(new Matrix(b))).times(new Matrix(c));
+    }
+
+    private Matrix scaleMatrix(int x, int y, double sx, double sy) {
+        double[][] a = {{1, 0, 0}, {0, 1, 0}, {(double) -x, (double) -y, 1}};
+        double[][] b = {{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}};
         double[][] c = {{1, 0, 0}, {0, 1, 0}, {(double) x, (double) y, 1}};
         return ((new Matrix(a)).times(new Matrix(b))).times(new Matrix(c));
     }
