@@ -92,7 +92,7 @@ public class CG {
         showImage();
     }
 
-    public void drawDashs() {
+    private void drawDashs() {
         for (int i = 0; i <= width; i += 100) {
             for (int j = 0; j <= height; j += 2) {
                 drawPixel(new Point(i, j));
@@ -124,16 +124,38 @@ public class CG {
         if (cli != null && cli.scaleMsg.containsKey(currentId)) {
             point = rotateOrScale(point, "scale");
         }
-        boolean flag = true;
-        if (cli != null && cli.clipMsg.containsKey(currentId)) {
-            flag = CohenSutherland(cli.clipMsg.get(currentId), point);
+        if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
+            image.setRGB(point.x, height - point.y, color);
         }
-        if (flag && point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
+    }
+
+    private void drawPixelLine(Point point) {
+        if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
     }
 
     void drawLine(Point a, Point b, String algorithm) {
+        if (cli != null && cli.rotateMsg.containsKey(currentId)) {
+            a = rotateOrScale(a, "rotate");
+            b = rotateOrScale(b, "rotate");
+        }
+        if (cli != null && cli.scaleMsg.containsKey(currentId)) {
+            a = rotateOrScale(a, "scale");
+            b = rotateOrScale(b, "scale");
+        }
+        if (cli != null && cli.clipMsg.containsKey(currentId)) {
+            ClipWindow clipWindow = cli.clipMsg.get(currentId);
+            //System.out.println("before clip, point a=" + a.toString() + ", b=" + b.toString());
+            if (algorithm.equals("Liang-Barsky")) {
+                if (!LiangBarsky(clipWindow, a, b)) {
+                    return;
+                }
+                // System.out.println("after clip, point a=" + a.toString() + ", b=" + b.toString());
+            } else if (!CohenSutherland(clipWindow, a, b)) {
+                return;
+            }
+        }
         if (algorithm.equals("Bresenham")) {
             drawLineBresenham(a, b);
         } else {
@@ -149,7 +171,7 @@ public class CG {
                 b = tmp;
             }
             for (int i = a.y; i < b.y; i++) {
-                this.drawPixel(new Point(a.x, i));
+                this.drawPixelLine(new Point(a.x, i));
             }
         } else {
             double k = ((double) b.y - a.y) / (double) (b.x - a.x);
@@ -160,7 +182,7 @@ public class CG {
                     b = tmp;
                 }
                 for (int i = a.x; i < b.x; i++) {
-                    this.drawPixel(new Point(i, (int) (a.y + (i - a.x) * k)));
+                    this.drawPixelLine(new Point(i, (int) (a.y + (i - a.x) * k)));
                 }
             } else {
                 if (a.y > b.y) {
@@ -169,7 +191,7 @@ public class CG {
                     b = tmp;
                 }
                 for (int i = a.y; i < b.y; i++) {
-                    this.drawPixel(new Point((int) ((i - a.y) / k + a.x), i));
+                    this.drawPixelLine(new Point((int) ((i - a.y) / k + a.x), i));
                 }
             }
         }
@@ -195,7 +217,7 @@ public class CG {
             int y = a.y;
 
             for (int x = a.x; x < b.x; x++) {
-                this.drawPixel(new Point(x, y));
+                this.drawPixelLine(new Point(x, y));
                 if (D > 0) {
                     y = y + yi;
                     D = D - 2 * dx;
@@ -219,7 +241,7 @@ public class CG {
             int x = a.x;
 
             for (int y = a.y; y < b.y; y++) {
-                this.drawPixel(new Point(x, y));
+                this.drawPixelLine(new Point(x, y));
                 if (D > 0) {
                     x = x + xi;
                     D = D - 2 * dy;
@@ -293,18 +315,104 @@ public class CG {
         this.currentId = currentId;
     }
 
-    private boolean CohenSutherland(ClipWindow clipWindow, Point point) {
+    private short CohenSutherlandNum(ClipWindow clipWindow, Point point) {
         short symbol = 0x0000;
         if (point.y > clipWindow.getYwmax()) {
             symbol |= 0x0008;
         } else if (point.y < clipWindow.getYwmin()) {
             symbol |= 0x0004;
         }
-        if (point.x < clipWindow.getXwmin()) {
+        if (point.x > clipWindow.getXwmax()) {
             symbol |= 0x0002;
-        } else if (point.x > clipWindow.getXwmax()) {
+        } else if (point.x < clipWindow.getXwmin()) {
             symbol |= 0x0001;
         }
-        return symbol == 0x0000;
+        // System.out.printf("x1=%d, y1=%d, x2=%d, y2=%d, point.x=%d, point.y=%d, symbol=%d\n",clipWindow.getXwmin(),clipWindow.getYwmin(),clipWindow.getXwmax(),clipWindow.getYwmax(),point.x,point.y,symbol);
+        return symbol;
     }
+
+    private boolean CohenSutherland(ClipWindow clipWindow, Point a, Point b) {
+        short aNum = CohenSutherlandNum(clipWindow, a);
+        short bNum = CohenSutherlandNum(clipWindow, b);
+        if ((aNum & bNum) != 0)
+            return false;
+        while (aNum != 0 || bNum != 0) {
+            int num;
+            Point tmpPoint;
+            int flag;
+            if (aNum != 0) {
+                flag = 0;
+                num = aNum;
+                tmpPoint = a;
+            } else {
+                flag = 1;
+                num = bNum;
+                tmpPoint = b;
+            }
+            if ((num & 1) != 0) { // left
+                tmpPoint.x = clipWindow.getXwmin();
+                tmpPoint.y = (b.y - a.y) * (tmpPoint.x - a.x) / (b.x - a.x) + a.y;
+            } else if ((num & 2) != 0) {
+                tmpPoint.x = clipWindow.getXwmax();
+                tmpPoint.y = (b.y - a.y) * (tmpPoint.x - a.x) / (b.x - a.x) + a.y;
+            } else if ((num & 4) != 0) {
+                tmpPoint.y = clipWindow.getYwmin();
+                tmpPoint.x = (b.x - a.x) * (tmpPoint.y - a.y) / (b.y - a.y) + a.x;
+            } else if ((num & 8) != 0) {
+                tmpPoint.y = clipWindow.getYwmax();
+                tmpPoint.x = (b.x - a.x) * (tmpPoint.y - a.y) / (b.y - a.y) + a.x;
+            }
+            if (flag == 0) {
+                aNum = CohenSutherlandNum(clipWindow, a);
+            } else bNum = CohenSutherlandNum(clipWindow, b);
+        }
+        return true;
+    }
+
+    private boolean LiangBarsky(ClipWindow clipWindow, Point a, Point b) {
+        double u0 = 0.0;
+        double u1 = 1.0;
+        double xdelta = b.x - a.x;
+        double ydelta = b.y - a.y;
+        double p = 0, q = 0;
+        for (int i = 0; i < 4; i++) {
+            if (i == 0) {
+                p = -xdelta;
+                q = a.x - clipWindow.getXwmin();
+            }
+            if (i == 1) {
+                p = xdelta;
+                q = clipWindow.getXwmax() - a.x;
+            }
+            if (i == 2) {
+                p = -ydelta;
+                q = a.y - clipWindow.getYwmin();
+            }
+            if (i == 3) {
+                p = ydelta;
+                q = clipWindow.getYwmax() - a.y;
+            }
+            double r = q / p;
+            if (p == 0 && q < 0)
+                return false;
+            if (p < 0) {
+                if (r > u1)
+                    return false;
+                else if (r > u0)
+                    u0 = r;
+            } else if (p > 0) {
+                if (r < u0)
+                    return false;
+                else if (r < u1)
+                    u1 = r;
+            }
+        }
+        int aa = a.x, bb = a.y;
+        a.x = (int) (a.x + u0 * xdelta);
+        a.y = (int) (a.y + u0 * ydelta);
+        b.x = (int) (aa + u1 * xdelta);
+        b.y = (int) (bb + u1 * ydelta);
+        return true;
+    }
+
 }

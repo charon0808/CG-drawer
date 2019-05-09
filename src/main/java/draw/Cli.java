@@ -8,18 +8,17 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 class Cli {
+    HashMap<Integer, Matrix> rotateMsg;
+    HashMap<Integer, Matrix> scaleMsg;
+    HashMap<Integer, ClipWindow> clipMsg;
     private String[] command;
     private String commandLine;
     private CG cg;
     private String errInfo;
     private int lastColor;
     private boolean reDrawFlag;
-
     private HashMap<Integer, String[]> shapes;
     private HashMap<Integer, Integer> shapesColor;
-    HashMap<Integer, Matrix> rotateMsg;
-    HashMap<Integer, Matrix> scaleMsg;
-    HashMap<Integer, ClipWindow> clipMsg;
 
     Cli(CG c) {
         cg = c;
@@ -86,8 +85,8 @@ class Cli {
                     return false;
                 }
                 try {
-                    int width = Integer.parseInt(command[1].toString());
-                    int height = Integer.parseInt(command[2].toString());
+                    int width = Integer.parseInt(command[1]);
+                    int height = Integer.parseInt(command[2]);
                     cg.resetCanvas(width, height);
                 } catch (NumberFormatException e) {
                     errInfo = "drawPolygon.\ncanvas_width and canvas_height values must be integers";
@@ -330,6 +329,7 @@ class Cli {
                 } catch (NumberFormatException e) {
                     return false;
                 }
+                this.redraw();
                 break;
             }
             default: {
@@ -362,10 +362,10 @@ final class ClipWindow {
     private String algorithm;
 
     ClipWindow(int x1, int y1, int x2, int y2, String a) {
-        this.xwmax = x1;
-        this.ywmax = y1;
-        this.xwmin = x2;
-        this.ywmin = y2;
+        this.xwmin = x1;
+        this.ywmin = y1;
+        this.xwmax = x2;
+        this.ywmax = y2;
         this.algorithm = a;
     }
 
