@@ -124,7 +124,11 @@ public class CG {
         if (cli != null && cli.scaleMsg.containsKey(currentId)) {
             point = rotateOrScale(point, "scale");
         }
-        if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
+        boolean flag = true;
+        if (cli != null && cli.clipMsg.containsKey(currentId)) {
+            flag = CohenSutherland(cli.clipMsg.get(currentId), point);
+        }
+        if (flag && point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
     }
@@ -287,5 +291,20 @@ public class CG {
 
     void setCurrentId(int currentId) {
         this.currentId = currentId;
+    }
+
+    private boolean CohenSutherland(ClipWindow clipWindow, Point point) {
+        short symbol = 0x0000;
+        if (point.y > clipWindow.getYwmax()) {
+            symbol |= 0x0008;
+        } else if (point.y < clipWindow.getYwmin()) {
+            symbol |= 0x0004;
+        }
+        if (point.x < clipWindow.getXwmin()) {
+            symbol |= 0x0002;
+        } else if (point.x > clipWindow.getXwmax()) {
+            symbol |= 0x0001;
+        }
+        return symbol == 0x0000;
     }
 }

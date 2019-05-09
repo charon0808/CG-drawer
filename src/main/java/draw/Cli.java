@@ -19,6 +19,7 @@ class Cli {
     private HashMap<Integer, Integer> shapesColor;
     HashMap<Integer, Matrix> rotateMsg;
     HashMap<Integer, Matrix> scaleMsg;
+    HashMap<Integer, ClipWindow> clipMsg;
 
     Cli(CG c) {
         cg = c;
@@ -26,6 +27,7 @@ class Cli {
         shapesColor = new HashMap<>();
         rotateMsg = new HashMap<>();
         scaleMsg = new HashMap<>();
+        clipMsg = new HashMap<>();
         reDrawFlag = false;
         cg.setCli(this);
     }
@@ -316,6 +318,18 @@ class Cli {
             case "clip": {
                 if (command.length != 7)
                     return false;
+                int id;
+                try {
+                    id = Integer.parseInt(command[1]);
+                    int x1 = (int) Double.parseDouble(command[2]);
+                    int y1 = (int) Double.parseDouble(command[3]);
+                    int x2 = (int) Double.parseDouble(command[4]);
+                    int y2 = (int) Double.parseDouble(command[5]);
+                    String algorithm = command[6];
+                    clipMsg.put(id, new ClipWindow(x1, y1, x2, y2, algorithm));
+                } catch (NumberFormatException e) {
+                    return false;
+                }
                 break;
             }
             default: {
@@ -337,5 +351,41 @@ class Cli {
         double[][] b = {{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}};
         double[][] c = {{1, 0, 0}, {0, 1, 0}, {(double) x, (double) y, 1}};
         return ((new Matrix(a)).times(new Matrix(b))).times(new Matrix(c));
+    }
+}
+
+final class ClipWindow {
+    private int xwmin;
+    private int ywmin;
+    private int xwmax;
+    private int ywmax;
+    private String algorithm;
+
+    ClipWindow(int x1, int y1, int x2, int y2, String a) {
+        this.xwmax = x1;
+        this.ywmax = y1;
+        this.xwmin = x2;
+        this.ywmin = y2;
+        this.algorithm = a;
+    }
+
+    public int getXwmin() {
+        return xwmin;
+    }
+
+    public int getYwmin() {
+        return ywmin;
+    }
+
+    public int getXwmax() {
+        return xwmax;
+    }
+
+    public int getYwmax() {
+        return ywmax;
+    }
+
+    public String getAlgorithm() {
+        return algorithm;
     }
 }
