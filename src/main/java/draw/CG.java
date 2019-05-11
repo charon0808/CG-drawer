@@ -299,6 +299,22 @@ public class CG {
         }
     }
 
+    void drawCurve(Point[] points, String algorithm) {
+        if (algorithm.equals("B-spline")) {
+            drawCurveBSpline(points);
+        } else { // Bezier
+            drawCurveBezier(points);
+        }
+    }
+
+    private void drawCurveBezier(Point[] points) {
+
+    }
+
+    private void drawCurveBSpline(Point[] points) {
+
+    }
+
     public Point translate(Point a, int xx, int yy) {
         return new Point(a.x + xx, a.y + yy);
     }

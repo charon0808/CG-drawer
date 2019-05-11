@@ -202,7 +202,7 @@ class Cli {
                     cg.setCurrentId(0x7fffffff);
                     cg.showImage();
                 } catch (NumberFormatException e) {
-                    errInfo = "drawEllipse.\nid , x, y, rx and ry values must be float number";
+                    errInfo = "drawEllipse.\nid must be integer, x, y, rx and ry values must be float number";
                     return false;
                 }
                 if (!shapesPut(id)) {
@@ -213,7 +213,25 @@ class Cli {
             }
             // drawCurve id n algorithm x1 y1 x2 y2  xn yn
             case "drawCurve": {
-                // if(command.length!=3) return false;
+                if (command.length <= 4) {
+                    errInfo = "drawCurve.\nUsage: drawCurve id n [ Bezier | B-spline default = Bezier] x1 y1 x2 y2 ... xn yn";
+                    return false;
+                }
+                int id;
+                try {
+                    id = Integer.parseInt(command[1]);
+                    int n = Integer.parseInt(command[2]);
+                    String algorithm = command[3];
+                    Point[] points = new Point[n];
+                    for (int i = 0; i < n; i++) {
+                        points[i] = new Point((int) Double.parseDouble(command[4 + i * 2]), (int) Double.parseDouble(command[4 + i * 2 + 1]));
+                    }
+                    cg.drawCurve(points, algorithm);
+                    cg.showImage();
+                } catch (NumberFormatException e) {
+                    errInfo = "drawCurve.\nid must be integer, x, y, rx and ry values must be float number";
+                    return false;
+                }
                 break;
             }
             // translate id dx dy

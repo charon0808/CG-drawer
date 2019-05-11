@@ -18,7 +18,7 @@ public class Listener extends MouseAdapter implements ActionListener {
     private int drawID;
     private Frame frame;
 
-    public Listener(CG c, Frame f) {
+    Listener(CG c, Frame f) {
         // TODO Auto-generated constructor stub
         currentShape = "line";
         arrayList = new ArrayList<>();
@@ -31,30 +31,38 @@ public class Listener extends MouseAdapter implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         String actionCommand = ((JButton) e.getSource()).getActionCommand();
-        if (actionCommand.equals("open")) {
-            JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
-            if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(frame)) {
-                File openFile = jFileChooser.getSelectedFile();
-                try {
-                    cg.setImage(ImageIO.read(openFile));
-                } catch (IOException e1) {
-                    // TODO:
+        switch (actionCommand) {
+            case "open": {
+                JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
+                if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(frame)) {
+                    File openFile = jFileChooser.getSelectedFile();
+                    try {
+                        cg.setImage(ImageIO.read(openFile));
+                    } catch (IOException e1) {
+                        // TODO:
+                    }
                 }
+                break;
             }
-        } else if (actionCommand.equals("save")) {
-            JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
-            if (JFileChooser.APPROVE_OPTION == jFileChooser.showSaveDialog(frame)) {
-                File saveFile = jFileChooser.getSelectedFile();
-                try {
-                    ImageIO.write(cg.getImage(), "bmp", saveFile);
-                } catch (IOException e1) {
-                    // TODO:
+            case "save": {
+                JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
+                if (JFileChooser.APPROVE_OPTION == jFileChooser.showSaveDialog(frame)) {
+                    File saveFile = jFileChooser.getSelectedFile();
+                    try {
+                        ImageIO.write(cg.getImage(), "bmp", saveFile);
+                    } catch (IOException e1) {
+                        // TODO:
+                    }
                 }
+                break;
             }
-        } else if (actionCommand.equals("clear")) {
-            cg.resetCanvas(cg.getWidth(), cg.getHeight());
-        } else
-            currentShape = actionCommand;
+            case "clear":
+                cg.resetCanvas(cg.getWidth(), cg.getHeight());
+                break;
+            default:
+                currentShape = actionCommand;
+                break;
+        }
         // System.err.println("shape=" + currentShape);
     }
 
@@ -63,8 +71,6 @@ public class Listener extends MouseAdapter implements ActionListener {
         Point tmpPoint = e.getPoint();
         tmpPoint.y = cg.getHeight() - tmpPoint.y;
         arrayList.add(tmpPoint);
-        // System.err.println("start point x=" + e.getX() + ", y=" + (cg.getHeight() -
-        // e.getY()));
     }
 
     @Override
@@ -72,8 +78,6 @@ public class Listener extends MouseAdapter implements ActionListener {
         Point tmpPoint = e.getPoint();
         tmpPoint.y = cg.getHeight() - tmpPoint.y;
         arrayList.add(tmpPoint);
-        // System.err.println("end point x=" + e.getX() + ", y=" + (cg.getHeight() -
-        // e.getY()));
         if (checkArrayList()) {
             switch (currentShape) {
                 case "line": {
