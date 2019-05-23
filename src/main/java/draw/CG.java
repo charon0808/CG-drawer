@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CG {
     private Frame frame;
@@ -17,11 +18,14 @@ public class CG {
     private int color;
     private Cli cli;
     private int currentId;
+    private boolean isFindNear;
+    private Point findNearPoint;
 
     CG(Frame f) throws IOException {
         frame = f;
         frame.setCG(this);
         frame.InitFrame();
+        isFindNear = false;
     }
 
     Cli getCli() {
@@ -35,8 +39,20 @@ public class CG {
     void resetCanvas(int w, int h) {
         width = w;
         height = h;
-        image = new BufferedImage(width, height + 1, BufferedImage.TYPE_INT_RGB);
+        if (cli != null) {
+            if (cli.shapes != null)
+                cli.shapes.clear();
+            if (cli.shapesColor != null)
+                cli.shapesColor.clear();
+            if (cli.rotateMsg != null)
+                cli.rotateMsg.clear();
+            if (cli.clipMsg != null)
+                cli.clipMsg.clear();
+            if (cli.scaleMsg != null)
+                cli.scaleMsg.clear();
+        }
         setColor(0);
+        image = new BufferedImage(width, height + 1, BufferedImage.TYPE_INT_RGB);
         clearCanvas();
     }
 
@@ -115,7 +131,7 @@ public class CG {
         return new Point((int) matrix.get(0, 0), (int) matrix.get(0, 1));
     }
 
-    private void drawPixel(Point point) {
+    private boolean drawPixel(Point point) {
         if (cli != null && cli.rotateMsg.containsKey(currentId)) {
             //System.out.printf("before rotate, x=%d, y=%d\n", point.x, point.y);
             point = rotateOrScale(point, "rotate");
@@ -124,18 +140,26 @@ public class CG {
         if (cli != null && cli.scaleMsg.containsKey(currentId)) {
             point = rotateOrScale(point, "scale");
         }
+        if (isFindNear) {
+            return Math.abs(point.x - findNearPoint.x) <= 10 && Math.abs((point.y - findNearPoint.y)) <= 10;
+        }
         if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
+        return false;
     }
 
-    private void drawPixelLine(Point point) {
+    private boolean drawPixelLine(Point point) {
+        if (isFindNear) {
+            return Math.abs(point.x - findNearPoint.x) <= 10 && Math.abs((point.y - findNearPoint.y)) <= 10;
+        }
         if (point.x > 0 && point.y > 0 && point.x < width && point.y < height) {
             image.setRGB(point.x, height - point.y, color);
         }
+        return false;
     }
 
-    void drawLine(Point a, Point b, String algorithm) {
+    boolean drawLine(Point a, Point b, String algorithm) {
         if (cli != null && cli.rotateMsg.containsKey(currentId)) {
             a = rotateOrScale(a, "rotate");
             b = rotateOrScale(b, "rotate");
@@ -149,21 +173,21 @@ public class CG {
             //System.out.println("before clip, point a=" + a.toString() + ", b=" + b.toString());
             if (algorithm.equals("Liang-Barsky")) {
                 if (!LiangBarsky(clipWindow, a, b)) {
-                    return;
+                    return false;
                 }
                 // System.out.println("after clip, point a=" + a.toString() + ", b=" + b.toString());
             } else if (!CohenSutherland(clipWindow, a, b)) {
-                return;
+                return false;
             }
         }
         if (algorithm.equals("Bresenham")) {
-            drawLineBresenham(a, b);
+            return drawLineBresenham(a, b);
         } else {
-            drawLineDDA(a, b);
+            return drawLineDDA(a, b);
         }
     }
 
-    private void drawLineDDA(Point a, Point b) {
+    private boolean drawLineDDA(Point a, Point b) {
         if (a.x == b.x) {
             if (a.y > b.y) {
                 Point tmp = a;
@@ -171,7 +195,8 @@ public class CG {
                 b = tmp;
             }
             for (int i = a.y; i < b.y; i++) {
-                this.drawPixelLine(new Point(a.x, i));
+                if (this.drawPixelLine(new Point(a.x, i)))
+                    return true;
             }
         } else {
             double k = ((double) b.y - a.y) / (double) (b.x - a.x);
@@ -182,7 +207,8 @@ public class CG {
                     b = tmp;
                 }
                 for (int i = a.x; i < b.x; i++) {
-                    this.drawPixelLine(new Point(i, (int) (a.y + (i - a.x) * k)));
+                    if (this.drawPixelLine(new Point(i, (int) (a.y + (i - a.x) * k))))
+                        return true;
                 }
             } else {
                 if (a.y > b.y) {
@@ -191,13 +217,16 @@ public class CG {
                     b = tmp;
                 }
                 for (int i = a.y; i < b.y; i++) {
-                    this.drawPixelLine(new Point((int) ((i - a.y) / k + a.x), i));
+                    if (this.drawPixelLine(new Point((int) ((i - a.y) / k + a.x), i))) {
+                        return true;
+                    }
                 }
             }
         }
+        return false;
     }
 
-    private void drawLineBresenham(Point a, Point b) { // 73 230 174 77
+    private boolean drawLineBresenham(Point a, Point b) { // 73 230 174 77
         // System.err.println(String.format("drawLine from (%d, %d) to (%d, %d)", a.x,
         // a.y, b.x, b.y));
         if (Math.abs(b.y - a.y) < Math.abs(b.x - a.x)) {
@@ -217,7 +246,8 @@ public class CG {
             int y = a.y;
 
             for (int x = a.x; x < b.x; x++) {
-                this.drawPixelLine(new Point(x, y));
+                if (this.drawPixelLine(new Point(x, y)))
+                    return true;
                 if (D > 0) {
                     y = y + yi;
                     D = D - 2 * dx;
@@ -241,7 +271,8 @@ public class CG {
             int x = a.x;
 
             for (int y = a.y; y < b.y; y++) {
-                this.drawPixelLine(new Point(x, y));
+                if (this.drawPixelLine(new Point(x, y)))
+                    return true;
                 if (D > 0) {
                     x = x + xi;
                     D = D - 2 * dy;
@@ -249,23 +280,27 @@ public class CG {
                 D = D + 2 * dx;
             }
         }
+        return false;
     }
 
-    void drawPloygon(Point[] points, String algorithm) {
+    boolean drawPloygon(Point[] points, String algorithm) {
         for (int i = 0; i < points.length - 1; i++) {
-            this.drawLine(points[i], points[i + 1], algorithm);
+            if (this.drawLine(points[i], points[i + 1], algorithm))
+                return true;
         }
-        this.drawLine(points[0], points[points.length - 1], algorithm);
+        if (this.drawLine(points[0], points[points.length - 1], algorithm))
+            return true;
+        return false;
     }
 
-    private void ellipseDraw4Points(Point center, int x, int y) {
-        this.drawPixel(new Point(center.x + x, center.y + y));
-        this.drawPixel(new Point(center.x + x, center.y - y));
-        this.drawPixel(new Point(center.x - x, center.y + y));
-        this.drawPixel(new Point(center.x - x, center.y - y));
+    private boolean ellipseDraw4Points(Point center, int x, int y) {
+        return this.drawPixel(new Point(center.x + x, center.y + y)) ||
+                this.drawPixel(new Point(center.x + x, center.y - y)) ||
+                this.drawPixel(new Point(center.x - x, center.y + y)) ||
+                this.drawPixel(new Point(center.x - x, center.y - y));
     }
 
-    void drawEllipse(Point center, int rx, int ry) {
+    boolean drawEllipse(Point center, int rx, int ry) {
         int rx2 = rx * rx;
         int ry2 = ry * ry;
         double pk = ry2 - rx2 * (ry - 0.25);
@@ -281,7 +316,8 @@ public class CG {
                 x++;
                 y--;
             }
-            this.ellipseDraw4Points(center, x, y);
+            if (this.ellipseDraw4Points(center, x, y))
+                return true;
         }
         pk = ry2 * Math.pow((double) x + 0.5, 2) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
         while (y >= 0) {
@@ -295,8 +331,10 @@ public class CG {
                 x++;
                 y--;
             }
-            this.ellipseDraw4Points(center, x, y);
+            if (this.ellipseDraw4Points(center, x, y))
+                return true;
         }
+        return false;
     }
 
     void drawCurve(Point[] points, String algorithm) {
@@ -431,4 +469,57 @@ public class CG {
         return true;
     }
 
+    public int findNearShape(Point point) {
+        isFindNear = true;
+        this.setFindNearPoint(point);
+        for (Map.Entry<Integer, String[]> entry : cli.shapes.entrySet()) {
+            int id = entry.getKey();
+            String[] commands = entry.getValue();
+            switch (commands[0]) {
+                case "drawLine": {
+                    int x1 = (int) Double.parseDouble(commands[2]);
+                    int y1 = (int) Double.parseDouble(commands[3]);
+                    int x2 = (int) Double.parseDouble(commands[4]);
+                    int y2 = (int) Double.parseDouble(commands[5]);
+                    if (drawLine(new Point(x1, y1), new Point(x2, y2), "default")) {
+                        isFindNear = false;
+                        return id;
+                    }
+                    break;
+                }
+                case "drawPolygon": {
+                    int n = Integer.parseInt(commands[2]);
+                    Point[] points = new Point[n];
+                    for (int i = 0; i < n; i++) {
+                        points[i] = new Point((int) Double.parseDouble(commands[4 + 2 * i]),
+                                (int) Double.parseDouble(commands[4 + 2 * i + 1]));
+                    }
+                    if (drawPloygon(points, commands[3])) {
+                        isFindNear = false;
+                        return id;
+                    }
+                    break;
+                }
+                case "drawEllipse": {
+                    // TODO:
+                    if (drawEllipse(new Point((int) Double.parseDouble(commands[2]), (int) Double.parseDouble(commands[3])),
+                            (int) Double.parseDouble(commands[4]), (int) Double.parseDouble(commands[5]))) {
+                        isFindNear = false;
+                        return id;
+                    }
+                    break;
+                }
+                case "drawCurve": {
+                    // TODO:
+                    break;
+                }
+            }
+        }
+        isFindNear = false;
+        return 0x7fffffff;
+    }
+
+    public void setFindNearPoint(Point findNearPoint) {
+        this.findNearPoint = findNearPoint;
+    }
 }

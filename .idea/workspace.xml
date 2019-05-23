@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="959b2e49-2b17-40f7-b574-8899a989d820" name="Default Changelist" comment="add clip line by Cohen-Sutherland and algorithm">
+    <list default="true" id="959b2e49-2b17-40f7-b574-8899a989d820" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/draw/CG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/CG.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/draw/Cli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Cli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/draw/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Frame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/draw/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Listener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/CG.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/CG.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Cli.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Cli.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Frame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Frame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Listener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Listener.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -31,14 +37,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="371" column="74" selection-start-line="371" selection-start-column="74" selection-end-line="371" selection-end-column="74" />
-              <folding>
-                <element signature="e#9234#9235#0" expanded="true" />
-                <element signature="e#9298#9299#0" expanded="true" />
-                <element signature="e#9363#9364#0" expanded="true" />
-                <element signature="e#9445#9446#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="381">
+              <caret line="141" column="9" lean-forward="true" selection-start-line="141" selection-start-column="9" selection-end-line="143" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -46,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Cli.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1895">
-              <caret line="360" column="22" selection-start-line="360" selection-start-column="22" selection-end-line="360" selection-end-column="22" />
+            <state relative-caret-position="5320">
+              <caret line="374" column="5" lean-forward="true" selection-start-line="374" selection-start-column="5" selection-end-line="374" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -55,11 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="125" column="21" selection-start-line="125" selection-start-column="21" selection-end-line="125" selection-end-column="21" />
-              <folding>
-                <element signature="e#4242#4243#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="2584">
+              <caret line="142" column="31" selection-start-line="142" selection-start-column="31" selection-end-line="142" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -67,8 +64,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1862">
-              <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
+            <state relative-caret-position="257">
+              <caret line="195" column="54" selection-start-line="195" selection-start-column="54" selection-end-line="195" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -90,6 +87,7 @@
       <find>edgeLeft</find>
       <find>x1src</find>
       <find>edge</find>
+      <find>shapesPut</find>
     </findStrings>
     <replaceStrings>
       <replace>b.x</replace>
@@ -107,9 +105,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Frame.java" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Listener.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Cli.java" />
         <option value="$PROJECT_DIR$/src/main/java/draw/CG.java" />
       </list>
@@ -123,10 +121,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="383" />
-    <option name="y" value="53" />
-    <option name="width" value="1772" />
-    <option name="height" value="1272" />
+    <option name="x" value="379" />
+    <option name="y" value="49" />
+    <option name="width" value="1776" />
+    <option name="height" value="1276" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -135,7 +133,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,6 +170,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -264,7 +262,10 @@
       <workItem from="1557123953322" duration="923000" />
       <workItem from="1557125252277" duration="833000" />
       <workItem from="1557388278696" duration="3947000" />
-      <workItem from="1557399185681" duration="9196000" />
+      <workItem from="1557399185681" duration="9548000" />
+      <workItem from="1558591466292" duration="8260000" />
+      <workItem from="1558607143263" duration="8093000" />
+      <workItem from="1558617748295" duration="1056000" />
     </task>
     <task id="LOCAL-00001" summary="using maven">
       <created>1557036193755</created>
@@ -301,17 +302,24 @@
       <option name="project" value="LOCAL" />
       <updated>1557392150305</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="add clip line by Cohen-Sutherland and Liang-Barsky algorithm">
+      <created>1557410316408</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1557410316409</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36562000" />
+    <option name="totallyTimeSpent" value="54323000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1563" height="854" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27145708" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28305647" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -320,13 +328,13 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.25658807" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.12188365" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39889196" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.18585297" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.18559557" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
@@ -340,6 +348,7 @@
       <window_info anchor="right" id="Maven" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="right" id="SciView" order="9" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +359,8 @@
     <MESSAGE value="using maven" />
     <MESSAGE value="add scale" />
     <MESSAGE value="add clip line by Cohen-Sutherland algorithm" />
-    <option name="LAST_COMMIT_MESSAGE" value="add clip line by Cohen-Sutherland algorithm" />
+    <MESSAGE value="add clip line by Cohen-Sutherland and Liang-Barsky algorithm" />
+    <option name="LAST_COMMIT_MESSAGE" value="add clip line by Cohen-Sutherland and Liang-Barsky algorithm" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -368,7 +378,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JComponent.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/event/ChangeListener.java" />
     <entry file="uml://MODULES/mdl-CG-Drawer">
       <provider selected="true" editor-type-id="UmlEditorProvider">
@@ -394,6 +403,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="994" selection-start-line="994" selection-end-line="994" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1197">
@@ -401,10 +417,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1862">
-          <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
+        <state relative-caret-position="2584">
+          <caret line="142" column="31" selection-start-line="142" selection-start-column="31" selection-end-line="142" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -415,33 +431,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="125" column="21" selection-start-line="125" selection-start-column="21" selection-end-line="125" selection-end-column="21" />
-          <folding>
-            <element signature="e#4242#4243#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="257">
+          <caret line="195" column="54" selection-start-line="195" selection-start-column="54" selection-end-line="195" selection-end-column="54" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/draw/Cli.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1895">
-          <caret line="360" column="22" selection-start-line="360" selection-start-column="22" selection-end-line="360" selection-end-column="22" />
+        <state relative-caret-position="5320">
+          <caret line="374" column="5" lean-forward="true" selection-start-line="374" selection-start-column="5" selection-end-line="374" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="371" column="74" selection-start-line="371" selection-start-column="74" selection-end-line="371" selection-end-column="74" />
-          <folding>
-            <element signature="e#9234#9235#0" expanded="true" />
-            <element signature="e#9298#9299#0" expanded="true" />
-            <element signature="e#9363#9364#0" expanded="true" />
-            <element signature="e#9445#9446#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="381">
+          <caret line="141" column="9" lean-forward="true" selection-start-line="141" selection-start-column="9" selection-end-line="143" selection-end-column="40" />
         </state>
       </provider>
     </entry>

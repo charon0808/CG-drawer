@@ -11,14 +11,14 @@ class Cli {
     HashMap<Integer, Matrix> rotateMsg;
     HashMap<Integer, Matrix> scaleMsg;
     HashMap<Integer, ClipWindow> clipMsg;
+    HashMap<Integer, String[]> shapes;
+    HashMap<Integer, Integer> shapesColor;
     private String[] command;
     private String commandLine;
     private CG cg;
     private String errInfo;
     private int lastColor;
     private boolean reDrawFlag;
-    private HashMap<Integer, String[]> shapes;
-    private HashMap<Integer, Integer> shapesColor;
 
     Cli(CG c) {
         cg = c;
@@ -271,6 +271,8 @@ class Cli {
                     }
                     case "drawEllipse": {
                         // TODO:
+                        tranCommand[2] = Integer.toString(((int) Double.parseDouble(tranCommand[2]) + dx));
+                        tranCommand[3] = Integer.toString(((int) Double.parseDouble(tranCommand[3]) + dy));
                         break;
                     }
                     case "drawCurve": {
@@ -343,7 +345,14 @@ class Cli {
                     int x2 = (int) Double.parseDouble(command[4]);
                     int y2 = (int) Double.parseDouble(command[5]);
                     String algorithm = command[6];
-                    clipMsg.put(id, new ClipWindow(x1, y1, x2, y2, algorithm));
+                    if (!clipMsg.containsKey(id))
+                        clipMsg.put(id, new ClipWindow(x1, y1, x2, y2, algorithm));
+                    else {
+                        ClipWindow clipWindow = clipMsg.get(id);
+                        ClipWindow newClipWindow = new ClipWindow(Math.max(x1, clipWindow.getXwmin()), Math.max(y1, clipWindow.getYwmin()),
+                                Math.min(x2, clipWindow.getXwmax()), Math.min(y2, clipWindow.getYwmax()), algorithm);
+                        clipMsg.replace(id, newClipWindow);
+                    }
                 } catch (NumberFormatException e) {
                     return false;
                 }
@@ -358,8 +367,9 @@ class Cli {
     }
 
     private Matrix rotateMatrix(int x, int y, int r) {
+        double rr = -Math.PI * (double) r / 180.0;
         double[][] a = {{1, 0, 0}, {0, 1, 0}, {(double) -x, (double) -y, 1}};
-        double[][] b = {{Math.cos(r), Math.sin(r), 0}, {-Math.sin(r), Math.cos(r), 0}, {0, 0, 1}};
+        double[][] b = {{Math.cos(rr), Math.sin(rr), 0}, {-Math.sin(rr), Math.cos(rr), 0}, {0, 0, 1}};
         double[][] c = {{1, 0, 0}, {0, 1, 0}, {(double) x, (double) y, 1}};
         return ((new Matrix(a)).times(new Matrix(b))).times(new Matrix(c));
     }

@@ -136,7 +136,7 @@ public class Frame extends JFrame {
 
         JToolBar shapePanel = new JToolBar();
         shapePanel.setLayout(new FlowLayout());
-        String[] shapes = {"line", "rectangle", "Ellipse"};
+        String[] shapes = {"line", "rectangle", "ellipse", "clip", "drag", "polygon", "rotate"};
         for (String i : shapes) {
             JButton button = new JButton(i);
             button.addActionListener(listener);
