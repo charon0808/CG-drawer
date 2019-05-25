@@ -7,19 +7,22 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CG {
+    Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.red, Color.YELLOW};
     private Frame frame;
     private BufferedImage image;
-
     private int width, height;
     private int color;
     private Cli cli;
     private int currentId;
     private boolean isFindNear;
     private Point findNearPoint;
+
 
     CG(Frame f) throws IOException {
         frame = f;
@@ -111,12 +114,12 @@ public class CG {
     private void drawDashs() {
         for (int i = 0; i <= width; i += 100) {
             for (int j = 0; j <= height; j += 2) {
-                drawPixel(new Point(i, j));
+                drawPixelLine(new Point(i, j));
             }
         }
         for (int i = 0; i <= height; i += 100) {
             for (int j = 0; j <= width; j += 2) {
-                drawPixel(new Point(j, i));
+                drawPixelLine(new Point(j, i));
             }
         }
     }
@@ -288,9 +291,7 @@ public class CG {
             if (this.drawLine(points[i], points[i + 1], algorithm))
                 return true;
         }
-        if (this.drawLine(points[0], points[points.length - 1], algorithm))
-            return true;
-        return false;
+        return this.drawLine(points[0], points[points.length - 1], algorithm);
     }
 
     private boolean ellipseDraw4Points(Point center, int x, int y) {
@@ -381,17 +382,19 @@ public class CG {
         } else if (point.x < clipWindow.getXwmin()) {
             symbol |= 0x0001;
         }
-        // System.out.printf("x1=%d, y1=%d, x2=%d, y2=%d, point.x=%d, point.y=%d, symbol=%d\n",clipWindow.getXwmin(),clipWindow.getYwmin(),clipWindow.getXwmax(),clipWindow.getYwmax(),point.x,point.y,symbol);
         return symbol;
     }
 
     private boolean CohenSutherland(ClipWindow clipWindow, Point a, Point b) {
+        System.err.println(clipWindow.toString());
         short aNum = CohenSutherlandNum(clipWindow, a);
         short bNum = CohenSutherlandNum(clipWindow, b);
         if ((aNum & bNum) != 0)
             return false;
-        while (aNum != 0 || bNum != 0) {
-            int num;
+        while ((aNum != 0 || bNum != 0)) {
+            if ((aNum & bNum) != 0)
+                return false;
+            short num;
             Point tmpPoint;
             int flag;
             if (aNum != 0) {
@@ -403,22 +406,30 @@ public class CG {
                 num = bNum;
                 tmpPoint = b;
             }
-            if ((num & 1) != 0) { // left
+            int ax = a.x;
+            int ay = a.y;
+            int bx = b.x;
+            int by = b.y;
+            if ((num & 1) != 0) {
                 tmpPoint.x = clipWindow.getXwmin();
-                tmpPoint.y = (b.y - a.y) * (tmpPoint.x - a.x) / (b.x - a.x) + a.y;
+                tmpPoint.y = (by - ay) * (tmpPoint.x - ax) / (bx - ax) + ay;
             } else if ((num & 2) != 0) {
                 tmpPoint.x = clipWindow.getXwmax();
-                tmpPoint.y = (b.y - a.y) * (tmpPoint.x - a.x) / (b.x - a.x) + a.y;
+                tmpPoint.y = (by - ay) * (tmpPoint.x - ax) / (bx - ax) + ay;
             } else if ((num & 4) != 0) {
                 tmpPoint.y = clipWindow.getYwmin();
-                tmpPoint.x = (b.x - a.x) * (tmpPoint.y - a.y) / (b.y - a.y) + a.x;
+                tmpPoint.x = (bx - ax) * (tmpPoint.y - ay) / (by - ay) + ax;
             } else if ((num & 8) != 0) {
                 tmpPoint.y = clipWindow.getYwmax();
-                tmpPoint.x = (b.x - a.x) * (tmpPoint.y - a.y) / (b.y - a.y) + a.x;
+                tmpPoint.x = (bx - ax) * (tmpPoint.y - ay) / (by - ay) + ax;
             }
             if (flag == 0) {
                 aNum = CohenSutherlandNum(clipWindow, a);
-            } else bNum = CohenSutherlandNum(clipWindow, b);
+            } else {
+                bNum = CohenSutherlandNum(clipWindow, b);
+            }
+            System.out.println("aNum=" + aNum + ", bNum=" + bNum);
+            System.out.println(a.toString() + ", " + b.toString());
         }
         return true;
     }
@@ -469,11 +480,12 @@ public class CG {
         return true;
     }
 
-    public int findNearShape(Point point) {
+    int findNearShape(Point point) {
         isFindNear = true;
         this.setFindNearPoint(point);
         for (Map.Entry<Integer, String[]> entry : cli.shapes.entrySet()) {
             int id = entry.getKey();
+            this.setCurrentId(id);
             String[] commands = entry.getValue();
             switch (commands[0]) {
                 case "drawLine": {
@@ -514,12 +526,39 @@ public class CG {
                     break;
                 }
             }
+            this.setCurrentId(0x7fffffff);
         }
         isFindNear = false;
         return 0x7fffffff;
     }
 
-    public void setFindNearPoint(Point findNearPoint) {
+    Object[] findLinesInClipWindow(ClipWindow clipWindow) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        Map shapesM = cli.shapes;
+        for (Map.Entry<Integer, String[]> entry : (Set<Map.Entry<Integer, String[]>>) shapesM.entrySet()) {
+            if (entry.getValue()[0].equals("drawLine")) {
+                String[] command = entry.getValue();
+                int id;
+                try {
+                    id = Integer.parseInt(command[1]);
+                    Point a = new Point((int) Double.parseDouble(command[2]), (int) Double.parseDouble(command[3]));
+                    Point b = new Point((int) Double.parseDouble(command[4]), (int) Double.parseDouble(command[5]));
+                    if (!CohenSutherland(clipWindow, a, b))
+                        continue;
+                    System.err.println("Point a: " + a.toString() + ", Point b:" + b.toString());
+                    short aNum = CohenSutherlandNum(clipWindow, a);
+                    short bNum = CohenSutherlandNum(clipWindow, b);
+                    if ((aNum & bNum) == 0)
+                        ret.add(id);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return ret.toArray();
+    }
+
+    private void setFindNearPoint(Point findNearPoint) {
         this.findNearPoint = findNearPoint;
     }
 }

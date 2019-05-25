@@ -13,6 +13,7 @@ public class Frame extends JFrame {
      */
     private static final long serialVersionUID = 1L;
     int xx, yy;
+    private Color[] colors;
     private JPanel canvasPanel;
     private JSlider sliderR, sliderG, sliderB;
     private BufferedImage image;
@@ -20,6 +21,7 @@ public class Frame extends JFrame {
 
     public void setCG(CG c) {
         cg = c;
+        colors = cg.colors;
     }
 
     private void setColor(int r, int g, int b) {
@@ -136,7 +138,7 @@ public class Frame extends JFrame {
 
         JToolBar shapePanel = new JToolBar();
         shapePanel.setLayout(new FlowLayout());
-        String[] shapes = {"line", "rectangle", "ellipse", "clip", "drag", "polygon", "rotate"};
+        String[] shapes = {"line", "rectangle", "polygon", "ellipse", "clip", "drag", "rotate", "scale"};
         for (String i : shapes) {
             JButton button = new JButton(i);
             button.addActionListener(listener);
@@ -144,8 +146,20 @@ public class Frame extends JFrame {
         }
         this.add(shapePanel, BorderLayout.PAGE_END);
 
+        JPanel colorPanel = new JPanel(new GridLayout(6, colors.length, 4, 8));
+        for (int i = 0; i < colors.length; i++) {
+            Color color = colors[i];
+            JButton cb = new JButton(String.valueOf(i));
+
+            cb.setPreferredSize(new Dimension(60, 30));
+            cb.setBackground(color);
+            cb.addActionListener(listener);
+            colorPanel.add(cb, BorderLayout.CENTER);
+        }
+
+        this.add(colorPanel, BorderLayout.LINE_END);
         this.setBackground(Color.WHITE);
-        this.setSize(900, 600);
+        this.setSize(1050, 725);
         this.setTitle("CG-drawer");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

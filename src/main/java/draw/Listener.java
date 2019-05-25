@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Listener extends MouseAdapter implements ActionListener {
     private String currentShape;
@@ -22,6 +23,9 @@ public class Listener extends MouseAdapter implements ActionListener {
     private Point timerPoint;
     private Point polygonStartPoint;
     private Point polygonLastPoint;
+    private int polygonPointCount;
+    private int polygonPointCountTotal;
+    private StringBuilder polygonCommand;
 
     Listener(CG c, Frame f) {
         // TODO Auto-generated constructor stub
@@ -30,44 +34,50 @@ public class Listener extends MouseAdapter implements ActionListener {
         drawID = -1;
         cg = c;
         frame = f;
+        polygonPointCountTotal = 100000000;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         String actionCommand = ((JButton) e.getSource()).getActionCommand();
-        switch (actionCommand) {
-            case "open": {
-                JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
-                if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(frame)) {
-                    File openFile = jFileChooser.getSelectedFile();
-                    try {
-                        cg.setImage(ImageIO.read(openFile));
-                    } catch (IOException e1) {
-                        // TODO:
+        try {
+            int colori = Integer.parseInt(actionCommand);
+            cg.setColor(cg.colors[colori].getRGB());
+        } catch (NumberFormatException ee1) {
+            switch (actionCommand) {
+                case "open": {
+                    JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
+                    if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(frame)) {
+                        File openFile = jFileChooser.getSelectedFile();
+                        try {
+                            cg.setImage(ImageIO.read(openFile));
+                        } catch (IOException e1) {
+                            // TODO:
+                        }
                     }
+                    break;
                 }
-                break;
-            }
-            case "save": {
-                JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
-                if (JFileChooser.APPROVE_OPTION == jFileChooser.showSaveDialog(frame)) {
-                    File saveFile = jFileChooser.getSelectedFile();
-                    try {
-                        ImageIO.write(cg.getImage(), "bmp", saveFile);
-                    } catch (IOException e1) {
-                        // TODO:
+                case "save": {
+                    JFileChooser jFileChooser = new JFileChooser(System.getProperty("user.dir"));
+                    if (JFileChooser.APPROVE_OPTION == jFileChooser.showSaveDialog(frame)) {
+                        File saveFile = jFileChooser.getSelectedFile();
+                        try {
+                            ImageIO.write(cg.getImage(), "bmp", saveFile);
+                        } catch (IOException e1) {
+                            // TODO:
+                        }
                     }
+                    break;
                 }
-                break;
+                case "clear": {
+                    cg.resetCanvas(cg.getWidth(), cg.getHeight());
+                    break;
+                }
+                default:
+                    currentShape = actionCommand;
+                    break;
             }
-            case "clear": {
-                cg.resetCanvas(cg.getWidth(), cg.getHeight());
-                break;
-            }
-            default:
-                currentShape = actionCommand;
-                break;
         }
         // System.err.println("shape=" + currentShape);
     }
@@ -114,12 +124,14 @@ public class Listener extends MouseAdapter implements ActionListener {
         lastTimerPoint = (Point) tmpPoint.clone();
         timerPoint = (Point) tmpPoint.clone();
         tmpPoint.y = cg.getHeight() - tmpPoint.y;
-        if (currentShape.equals("drag") || currentShape.equals("rotate")) {
+        if (currentShape.equals("drag") || currentShape.equals("rotate") || currentShape.equals("scale")) {
             mousePressedId = cg.findNearShape(tmpPoint);
         } else if (currentShape.equals("polygon")) {
             if (polygonStartPoint == null) {
                 polygonStartPoint = (Point) tmpPoint.clone();
                 polygonLastPoint = (Point) tmpPoint.clone();
+                polygonPointCount = 0;
+                polygonCommand = new StringBuilder();
             }
         }
         arrayList.add(tmpPoint);
@@ -157,6 +169,18 @@ public class Listener extends MouseAdapter implements ActionListener {
                 case "clip": {
                     Point aPoint = arrayList.get(0);
                     Point bPoint = arrayList.get(1);
+                    int x1 = Math.min(aPoint.x, bPoint.x);
+                    int y1 = Math.min(aPoint.y, bPoint.y);
+                    int x2 = Math.max(aPoint.x, bPoint.x);
+                    int y2 = Math.max(aPoint.y, bPoint.y);
+                    Object[] lineIds = cg.findLinesInClipWindow(new ClipWindow(x1, y1, x2, y2, "naive"));
+                    System.err.println(Arrays.toString(lineIds));
+                    if (lineIds != null)
+                        for (Object i : lineIds) {
+                            String command = String.format("clip %d %d %d %d %d %s", i, x1, y1, x2, y2, "naive");
+                            System.err.println(command);
+                            cg.getCli().updateCli(command);
+                        }
                     break;
                 }
                 case "drag": {
@@ -169,11 +193,16 @@ public class Listener extends MouseAdapter implements ActionListener {
                         arrayList.add(polygonStartPoint);
                         tmpFlag = true;
                     }
-                    String command = String.format("drawLine %d %d %d %d %d %s", drawID--, polygonLastPoint.x,
-                            polygonLastPoint.y, arrayList.get(1).x, arrayList.get(1).y, "navie");
-                    cg.getCli().updateCli(command);
+                    String tmpCommand = String.format("drawLine %d %d %d %d %d %s", polygonPointCountTotal + polygonPointCount++, polygonLastPoint.x, polygonLastPoint.y, arrayList.get(1).x, arrayList.get(1).y, "navie");
+                    cg.getCli().updateCli(tmpCommand);
+                    polygonCommand.append(String.format("%d %d ", polygonLastPoint.x, polygonLastPoint.y));
                     polygonLastPoint = arrayList.get(1);
                     if (tmpFlag) {
+                        polygonPointCountTotal += polygonPointCount;
+                        polygonCommand.insert(0, String.format("drawPolygon %d %d naive ", drawID--, polygonPointCount));
+                        System.out.println(polygonCommand.toString());
+                        cg.getCli().updateCli(polygonCommand.toString());
+                        cg.getCli().redraw();
                         polygonStartPoint = null;
                         polygonLastPoint = null;
                     }
@@ -181,16 +210,34 @@ public class Listener extends MouseAdapter implements ActionListener {
                 }
                 case "rotate": {
                     System.out.println(mousePressedId);
-                    String inputValue;
                     if (mousePressedId != 0x7fffffff) {
                         try {
                             String pointInput = JOptionPane.showInputDialog("input the rotate center x and y coordinate, separated by commas");
-                            String[] xy = pointInput.split(",");
+                            String[] xy = pointInput.split("[,，]");
                             String angleInput = JOptionPane.showInputDialog("input rotate angle");
                             int angle = (int) Double.parseDouble(angleInput);
                             int x = (int) Double.parseDouble(xy[0]);
                             int y = (int) Double.parseDouble(xy[1]);
                             String command = String.format("rotate %d %d %d %d", mousePressedId, x, y, angle);
+                            System.out.println(command);
+                            cg.getCli().updateCli(command);
+                        } catch (Exception ee) {
+                            JOptionPane.showMessageDialog(null, "Invalid input!");
+                        }
+                    }
+                    break;
+                }
+                case "scale": {
+                    System.out.println(mousePressedId);
+                    if (mousePressedId != 0x7fffffff) {
+                        try {
+                            String pointInput = JOptionPane.showInputDialog("input the scale center x and y coordinate, separated by commas");
+                            String[] xy = pointInput.split("[,，]");
+                            String angleInput = JOptionPane.showInputDialog("input scale factor");
+                            int angle = (int) Double.parseDouble(angleInput);
+                            int x = (int) Double.parseDouble(xy[0]);
+                            int y = (int) Double.parseDouble(xy[1]);
+                            String command = String.format("scale %d %d %d %d", mousePressedId, x, y, angle);
                             System.out.println(command);
                             cg.getCli().updateCli(command);
                         } catch (Exception ee) {

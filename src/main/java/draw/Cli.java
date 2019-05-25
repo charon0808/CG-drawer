@@ -57,6 +57,8 @@ class Cli {
         reDrawFlag = true;
         cg.clearCanvas();
         for (Entry<Integer, String[]> entry : shapes.entrySet()) {
+            if (entry.getKey() >= 100000000)
+                continue;
             cg.setColor(shapesColor.get(entry.getKey()));
             updateCli(entry.getValue());
         }
@@ -415,5 +417,10 @@ final class ClipWindow {
 
     public String getAlgorithm() {
         return algorithm;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("x1=%d, y1=%d, x2=%d, y2=%d, algorithm=%s", xwmin, ywmin, xwmax, ywmax, algorithm);
     }
 }
