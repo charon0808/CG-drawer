@@ -28,7 +28,7 @@ public class Main {
                 else {
                     // error
                 }
-                line.replace("\n", " ");
+                line = line.replace("\n", " ");
             }
             line = line.trim();
             if (line.equals("exit"))

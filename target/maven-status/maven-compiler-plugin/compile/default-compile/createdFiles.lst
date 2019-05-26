@@ -1,4 +1,5 @@
 draw\Frame.class
+draw\ClipWindow.class
 draw\Frame$2.class
 draw\Frame$4.class
 draw\Listener.class

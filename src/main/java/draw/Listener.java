@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Listener extends MouseAdapter implements ActionListener {
     private String currentShape;
@@ -174,11 +173,11 @@ public class Listener extends MouseAdapter implements ActionListener {
                     int x2 = Math.max(aPoint.x, bPoint.x);
                     int y2 = Math.max(aPoint.y, bPoint.y);
                     Object[] lineIds = cg.findLinesInClipWindow(new ClipWindow(x1, y1, x2, y2, "naive"));
-                    System.err.println(Arrays.toString(lineIds));
+                    //System.err.println(Arrays.toString(lineIds));
                     if (lineIds != null)
                         for (Object i : lineIds) {
                             String command = String.format("clip %d %d %d %d %d %s", i, x1, y1, x2, y2, "naive");
-                            System.err.println(command);
+                            //System.err.println(command);
                             cg.getCli().updateCli(command);
                         }
                     break;
@@ -200,7 +199,7 @@ public class Listener extends MouseAdapter implements ActionListener {
                     if (tmpFlag) {
                         polygonPointCountTotal += polygonPointCount;
                         polygonCommand.insert(0, String.format("drawPolygon %d %d naive ", drawID--, polygonPointCount));
-                        System.out.println(polygonCommand.toString());
+                        //System.out.println(polygonCommand.toString());
                         cg.getCli().updateCli(polygonCommand.toString());
                         cg.getCli().redraw();
                         polygonStartPoint = null;
@@ -209,7 +208,7 @@ public class Listener extends MouseAdapter implements ActionListener {
                     break;
                 }
                 case "rotate": {
-                    System.out.println(mousePressedId);
+                    //System.out.println(mousePressedId);
                     if (mousePressedId != 0x7fffffff) {
                         try {
                             String pointInput = JOptionPane.showInputDialog("input the rotate center x and y coordinate, separated by commas");
@@ -219,16 +218,17 @@ public class Listener extends MouseAdapter implements ActionListener {
                             int x = (int) Double.parseDouble(xy[0]);
                             int y = (int) Double.parseDouble(xy[1]);
                             String command = String.format("rotate %d %d %d %d", mousePressedId, x, y, angle);
-                            System.out.println(command);
+                            //System.out.println(command);
                             cg.getCli().updateCli(command);
-                        } catch (Exception ee) {
+                        } catch (NumberFormatException ee) {
+                            ee.printStackTrace();
                             JOptionPane.showMessageDialog(null, "Invalid input!");
                         }
                     }
                     break;
                 }
                 case "scale": {
-                    System.out.println(mousePressedId);
+                    //System.out.println(mousePressedId);
                     if (mousePressedId != 0x7fffffff) {
                         try {
                             String pointInput = JOptionPane.showInputDialog("input the scale center x and y coordinate, separated by commas");
@@ -238,7 +238,7 @@ public class Listener extends MouseAdapter implements ActionListener {
                             int x = (int) Double.parseDouble(xy[0]);
                             int y = (int) Double.parseDouble(xy[1]);
                             String command = String.format("scale %d %d %d %d", mousePressedId, x, y, angle);
-                            System.out.println(command);
+                            //System.out.println(command);
                             cg.getCli().updateCli(command);
                         } catch (Exception ee) {
                             JOptionPane.showMessageDialog(null, "Invalid input!");

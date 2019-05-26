@@ -65,7 +65,7 @@ public class CG {
                 image.setRGB(i, j, 0xffffffff);
             }
         }
-        this.drawDashs();
+        // this.drawDashs();
         this.showImage();
     }
 
@@ -306,9 +306,7 @@ public class CG {
         int ry2 = ry * ry;
         double pk = ry2 - rx2 * (ry - 0.25);
         int x = 0, y = ry;
-        //System.out.printf("center.x = %d, center.y = %d, rx = %d, ry = %d\n", center.x, center.y, rx, ry);
         while (ry2 * x < rx2 * y) {
-            //System.out.println("[DEBUG] in drawEllipse, x= " + x + ", y= " + y);
             if (pk < 0) {
                 pk = pk + (ry2 * ((2 * x) + 3));
                 x++;
@@ -386,7 +384,6 @@ public class CG {
     }
 
     private boolean CohenSutherland(ClipWindow clipWindow, Point a, Point b) {
-        System.err.println(clipWindow.toString());
         short aNum = CohenSutherlandNum(clipWindow, a);
         short bNum = CohenSutherlandNum(clipWindow, b);
         if ((aNum & bNum) != 0)
@@ -428,8 +425,6 @@ public class CG {
             } else {
                 bNum = CohenSutherlandNum(clipWindow, b);
             }
-            System.out.println("aNum=" + aNum + ", bNum=" + bNum);
-            System.out.println(a.toString() + ", " + b.toString());
         }
         return true;
     }
@@ -545,7 +540,6 @@ public class CG {
                     Point b = new Point((int) Double.parseDouble(command[4]), (int) Double.parseDouble(command[5]));
                     if (!CohenSutherland(clipWindow, a, b))
                         continue;
-                    System.err.println("Point a: " + a.toString() + ", Point b:" + b.toString());
                     short aNum = CohenSutherlandNum(clipWindow, a);
                     short bNum = CohenSutherlandNum(clipWindow, b);
                     if ((aNum & bNum) == 0)
