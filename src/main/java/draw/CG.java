@@ -65,7 +65,7 @@ public class CG {
                 image.setRGB(i, j, 0xffffffff);
             }
         }
-        // this.drawDashs();
+        this.drawDashs();
         this.showImage();
     }
 
@@ -336,22 +336,6 @@ public class CG {
         return false;
     }
 
-    void drawCurve(Point[] points, String algorithm) {
-        if (algorithm.equals("B-spline")) {
-            drawCurveBSpline(points);
-        } else { // Bezier
-            drawCurveBezier(points);
-        }
-    }
-
-    private void drawCurveBezier(Point[] points) {
-
-    }
-
-    private void drawCurveBSpline(Point[] points) {
-
-    }
-
     public Point translate(Point a, int xx, int yy) {
         return new Point(a.x + xx, a.y + yy);
     }
@@ -554,5 +538,47 @@ public class CG {
 
     private void setFindNearPoint(Point findNearPoint) {
         this.findNearPoint = findNearPoint;
+    }
+
+    private dPoint B(double t, int a, int b, Point[] points) {
+        if (a != b) {
+            dPoint aa = B(t, a, b - 1, points);
+            dPoint bb = B(t, a + 1, b, points);
+            return new dPoint((1 - t) * aa.x + t * bb.x, (1 - t) * aa.y + t * bb.y);
+        }
+        return new dPoint(points[a].x, points[a].y);
+    }
+
+    void drawCurve(Point[] points, String algorithm) {
+        if (algorithm.equals("B-spline")) {
+            drawCurveBSpline(points);
+        } else { // Bezier
+            drawCurveBezier(points);
+        }
+    }
+
+    private void drawCurveBezier(Point[] points) {
+        for (int i = 0; i <= 1000; i++) {
+            Point point = B(i / 1000.00, 0, points.length - 1, points).toPoint();
+            this.drawPixel(point);
+        }
+    }
+
+    private void drawCurveBSpline(Point[] points) {
+
+    }
+}
+
+class dPoint {
+    double x;
+    double y;
+
+    dPoint(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Point toPoint() {
+        return new Point((int) this.x, (int) this.y);
     }
 }
