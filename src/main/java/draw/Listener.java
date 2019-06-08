@@ -95,7 +95,8 @@ public class Listener extends MouseAdapter implements ActionListener {
                 tranCommand[5] = Integer.toString(((int) Double.parseDouble(tranCommand[5]) + dy));
                 break;
             }
-            case "drawPolygon": {
+            case "drawPolygon":
+            case "drawCurve": {
                 int n = Integer.parseInt(tranCommand[2]);
                 for (int i = 0; i < n; i++) {
                     tranCommand[4 + 2 * i] = Integer.toString((int) Double.parseDouble(tranCommand[4 + 2 * i]) + dx);
@@ -107,10 +108,6 @@ public class Listener extends MouseAdapter implements ActionListener {
                 // TODO:
                 tranCommand[2] = Integer.toString(((int) Double.parseDouble(tranCommand[2]) + dx));
                 tranCommand[3] = Integer.toString(((int) Double.parseDouble(tranCommand[3]) + dy));
-                break;
-            }
-            case "drawCurve": {
-                // TODO:
                 break;
             }
         }
@@ -176,7 +173,7 @@ public class Listener extends MouseAdapter implements ActionListener {
                     //System.err.println(Arrays.toString(lineIds));
                     if (lineIds != null)
                         for (Object i : lineIds) {
-                            String command = String.format("clip %d %d %d %d %d %s", i, x1, y1, x2, y2, "naive");
+                            String command = String.format("clip %d %d %d %d %d %s", (int) i, x1, y1, x2, y2, "naive");
                             //System.err.println(command);
                             cg.getCli().updateCli(command);
                         }
@@ -212,7 +209,7 @@ public class Listener extends MouseAdapter implements ActionListener {
                     if (mousePressedId != 0x7fffffff) {
                         try {
                             String pointInput = JOptionPane.showInputDialog("input the rotate center x and y coordinate, separated by commas");
-                            String[] xy = pointInput.split("[,，]");
+                            String[] xy = pointInput.split("[,]");
                             String angleInput = JOptionPane.showInputDialog("input rotate angle");
                             int angle = (int) Double.parseDouble(angleInput);
                             int x = (int) Double.parseDouble(xy[0]);

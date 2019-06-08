@@ -6,7 +6,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Frame extends JFrame {
+class Frame extends JFrame {
 
     /**
      *
@@ -19,7 +19,7 @@ public class Frame extends JFrame {
     private BufferedImage image;
     private CG cg;
 
-    public void setCG(CG c) {
+    void setCG(CG c) {
         cg = c;
         colors = cg.colors;
     }

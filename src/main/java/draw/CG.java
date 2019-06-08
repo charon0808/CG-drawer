@@ -501,7 +501,16 @@ public class CG {
                     break;
                 }
                 case "drawCurve": {
-                    // TODO:
+                    int n = Integer.parseInt(commands[2]);
+                    Point[] points = new Point[n];
+                    for (int i = 0; i < n; i++) {
+                        points[i] = new Point((int) Double.parseDouble(commands[4 + 2 * i]),
+                                (int) Double.parseDouble(commands[4 + 2 * i + 1]));
+                    }
+                    if (drawCurve(points, commands[3])) {
+                        isFindNear = false;
+                        return id;
+                    }
                     break;
                 }
             }
@@ -549,22 +558,24 @@ public class CG {
         return new dPoint(points[a].x, points[a].y);
     }
 
-    void drawCurve(Point[] points, String algorithm) {
+    boolean drawCurve(Point[] points, String algorithm) {
         if (algorithm.equals("B-spline")) {
-            drawCurveBSpline(points);
+            return drawCurveBSpline(points);
         } else { // Bezier
-            drawCurveBezier(points);
+            return drawCurveBezier(points);
         }
     }
 
-    private void drawCurveBezier(Point[] points) {
+    private boolean drawCurveBezier(Point[] points) {
         for (int i = 0; i <= 1000; i++) {
             Point point = B(i / 1000.00, 0, points.length - 1, points).toPoint();
-            this.drawPixel(point);
+            if (this.drawPixel(point))
+                return true;
         }
+        return false;
     }
 
-    Point BSpline3(double t, Point[] points, int i) {
+    private Point BSpline3(double t, Point[] points, int i) {
         double t1 = Math.pow(1.0 - t, 3);
         double t2 = 3 * Math.pow(t, 3) - 6 * Math.pow(t, 2) + 4;
         double t3 = -3 * Math.pow(t, 3) + 3 * Math.pow(t, 2) + 3 * t + 1;
@@ -576,13 +587,15 @@ public class CG {
         return dp1.adddPoint(dp2).adddPoint(dp3).adddPoint(dp4).multidPoint(1.0 / 6.0).toPoint();
     }
 
-    private void drawCurveBSpline(Point[] points) {
+    private boolean drawCurveBSpline(Point[] points) {
         for (int i = 0; i + 3 < points.length; i++) {
             for (int t = 0; t <= 100; t++) {
                 Point point = BSpline3(t / 100.0, points, i);
-                drawPixel(point);
+                if (this.drawPixel(point))
+                    return true;
             }
         }
+        return false;
     }
 }
 
