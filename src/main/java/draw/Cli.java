@@ -32,6 +32,7 @@ class Cli {
     }
 
     public void updateCli(String line) {
+        line = line.trim();
         errInfo = null;
         commandLine = line;
         command = line.split("\\s+");
@@ -228,10 +229,16 @@ class Cli {
                     for (int i = 0; i < n; i++) {
                         points[i] = new Point((int) Double.parseDouble(command[4 + i * 2]), (int) Double.parseDouble(command[4 + i * 2 + 1]));
                     }
+                    cg.setCurrentId(id);
                     cg.drawCurve(points, algorithm);
+                    cg.setCurrentId(0x7fffffff);
                     cg.showImage();
                 } catch (NumberFormatException e) {
                     errInfo = "drawCurve.\nid must be integer, x, y, rx and ry values must be float number";
+                    return false;
+                }
+                if (!shapesPut(id)) {
+                    errInfo = "drawCurve.\nid:" + id + " already existed.";
                     return false;
                 }
                 break;

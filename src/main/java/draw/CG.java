@@ -564,8 +564,25 @@ public class CG {
         }
     }
 
-    private void drawCurveBSpline(Point[] points) {
+    Point BSpline3(double t, Point[] points, int i) {
+        double t1 = Math.pow(1.0 - t, 3);
+        double t2 = 3 * Math.pow(t, 3) - 6 * Math.pow(t, 2) + 4;
+        double t3 = -3 * Math.pow(t, 3) + 3 * Math.pow(t, 2) + 3 * t + 1;
+        double t4 = Math.pow(t, 3);
+        dPoint dp1 = new dPoint(points[i]).multidPoint(t1);
+        dPoint dp2 = new dPoint(points[i + 1]).multidPoint(t2);
+        dPoint dp3 = new dPoint(points[i + 2]).multidPoint(t3);
+        dPoint dp4 = new dPoint(points[i + 3]).multidPoint(t4);
+        return dp1.adddPoint(dp2).adddPoint(dp3).adddPoint(dp4).multidPoint(1.0 / 6.0).toPoint();
+    }
 
+    private void drawCurveBSpline(Point[] points) {
+        for (int i = 0; i + 3 < points.length; i++) {
+            for (int t = 0; t <= 100; t++) {
+                Point point = BSpline3(t / 100.0, points, i);
+                drawPixel(point);
+            }
+        }
     }
 }
 
@@ -576,6 +593,19 @@ class dPoint {
     dPoint(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    dPoint(Point point) {
+        this.x = point.x;
+        this.y = point.y;
+    }
+
+    dPoint multidPoint(double d) {
+        return new dPoint(this.x * d, this.y * d);
+    }
+
+    dPoint adddPoint(dPoint dp) {
+        return new dPoint(this.x + dp.x, this.y + dp.y);
     }
 
     Point toPoint() {

@@ -125,7 +125,7 @@ public class Listener extends MouseAdapter implements ActionListener {
         tmpPoint.y = cg.getHeight() - tmpPoint.y;
         if (currentShape.equals("drag") || currentShape.equals("rotate") || currentShape.equals("scale")) {
             mousePressedId = cg.findNearShape(tmpPoint);
-        } else if (currentShape.equals("polygon")) {
+        } else if (currentShape.equals("polygon") || currentShape.contains("curve")) {
             if (polygonStartPoint == null) {
                 polygonStartPoint = (Point) tmpPoint.clone();
                 polygonLastPoint = (Point) tmpPoint.clone();
@@ -243,6 +243,36 @@ public class Listener extends MouseAdapter implements ActionListener {
                         } catch (Exception ee) {
                             JOptionPane.showMessageDialog(null, "Invalid input!");
                         }
+                    }
+                    break;
+                }
+                case "curve-Bezier":
+                case "curve-B-Spline": {
+                    boolean tmpFlag = false;
+                    if (Math.abs(arrayList.get(1).x - polygonStartPoint.x) <= 10 && Math.abs(arrayList.get(1).y - polygonStartPoint.y) <= 10) {
+                        arrayList.remove(1);
+                        arrayList.add(polygonStartPoint);
+                        tmpFlag = true;
+                    }
+                    if (!tmpFlag) {
+                        String tmpCommand = String.format("drawLine %d %d %d %d %d %s", polygonPointCountTotal + polygonPointCount++, polygonLastPoint.x, polygonLastPoint.y, arrayList.get(1).x, arrayList.get(1).y, "navie");
+                        cg.getCli().updateCli(tmpCommand);
+                        polygonCommand.append(String.format("%d %d ", polygonLastPoint.x, polygonLastPoint.y));
+                        polygonLastPoint = arrayList.get(1);
+                    }
+                    if (tmpFlag) {
+                        polygonPointCountTotal += polygonPointCount;
+                        String algorithm;
+                        if (currentShape.equals("curve-Bezier")) {
+                            algorithm = "Bezier";
+                        } else algorithm = "B-spline";
+                        polygonCommand.insert(0, String.format("drawCurve %d %d %s ", drawID--, polygonPointCount, algorithm));
+                        //System.out.println(polygonCommand.toString());
+                        cg.getCli().updateCli(polygonCommand.toString());
+                        System.out.println(polygonCommand.toString());
+                        cg.getCli().redraw();
+                        polygonStartPoint = null;
+                        polygonLastPoint = null;
                     }
                     break;
                 }
