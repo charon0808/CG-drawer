@@ -7,10 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CG {
     Color[] colors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.red, Color.YELLOW};
@@ -39,6 +36,10 @@ public class CG {
         cli = cc;
     }
 
+    Frame getFrame() {
+        return this.frame;
+    }
+
     void resetCanvas(int w, int h) {
         width = w;
         height = h;
@@ -65,7 +66,7 @@ public class CG {
                 image.setRGB(i, j, 0xffffffff);
             }
         }
-        this.drawDashs();
+        // this.drawDashs();
         this.showImage();
     }
 
@@ -182,6 +183,14 @@ public class CG {
             } else if (!CohenSutherland(clipWindow, a, b)) {
                 return false;
             }
+            // drawLine id x1 y1 x2 y2 algorithm[DDA|Bresenham] default = DDA
+            String[] lineCommand = cli.shapes.get(currentId);
+            lineCommand[2] = String.valueOf(a.x);
+            lineCommand[3] = String.valueOf(a.y);
+            lineCommand[4] = String.valueOf(b.x);
+            lineCommand[5] = String.valueOf(b.y);
+            cli.shapes.replace(currentId, lineCommand);
+            cli.clipMsg.remove(currentId);
         }
         if (algorithm.equals("Bresenham")) {
             return drawLineBresenham(a, b);
@@ -549,6 +558,14 @@ public class CG {
         this.findNearPoint = findNearPoint;
     }
 
+    boolean drawCurve(Point[] points, String algorithm) {
+        if (algorithm.equals("B-spline")) {
+            return drawCurveBSpline(points);
+        } else { // Bezier
+            return drawCurveBezier(points);
+        }
+    }
+
     private dPoint B(double t, int a, int b, Point[] points) {
         if (a != b) {
             dPoint aa = B(t, a, b - 1, points);
@@ -556,14 +573,6 @@ public class CG {
             return new dPoint((1 - t) * aa.x + t * bb.x, (1 - t) * aa.y + t * bb.y);
         }
         return new dPoint(points[a].x, points[a].y);
-    }
-
-    boolean drawCurve(Point[] points, String algorithm) {
-        if (algorithm.equals("B-spline")) {
-            return drawCurveBSpline(points);
-        } else { // Bezier
-            return drawCurveBezier(points);
-        }
     }
 
     private boolean drawCurveBezier(Point[] points) {
@@ -588,13 +597,100 @@ public class CG {
     }
 
     private boolean drawCurveBSpline(Point[] points) {
-        for (int i = 0; i + 3 < points.length; i++) {
+        /*for (int i = 0; i + 3 < points.length; i++) {
             for (int t = 0; t <= 100; t++) {
                 Point point = BSpline3(t / 100.0, points, i);
                 if (this.drawPixel(point))
                     return true;
             }
+        }*/
+        int n = points.length - 1;
+        double[] h = new double[n + 1];
+        for (int i = 0; i < n; i++) {
+            h[i] = points[i + 1].x - points[i].x;
         }
+        double[] lamda = new double[n + 1];
+        double[] mu = new double[n + 1];
+        double[] g = new double[n + 1];
+        for (int i = 1; i < n; i++) {
+            final double hh = h[i - 1] + h[i];
+            lamda[i] = h[i] / hh;
+            mu[i] = h[i - 1] / hh;
+            g[i] = 3 * (lamda[i] * (points[i - 1].y - points[i].y) / (points[i - 1].x - points[i].x) + mu[i] * (points[i].y - points[i + 1].y) / (points[i].x - points[i + 1].x));
+        }
+        g[0] = 3 * (points[0].y - points[1].y) / (points[0].x - points[1].x);
+        g[n] = 3 * (points[n - 1].y - points[n].y) / (points[n - 1].x - points[n].x);
+        double[][] mat = new double[n + 1][n + 1];
+        for (int i = 0; i < n + 1; i++)
+            for (int j = 0; j < n + 1; j++)
+                mat[i][j] = 0;
+        mat[0][0] = mat[n][n] = 2;
+        mat[0][1] = mat[n][n - 1] = 1;
+        for (int i = 1; i < n; i++) {
+            mat[i][i] = 2;
+            mat[i][i - 1] = lamda[i];
+            mat[i][i + 1] = mu[i];
+        }
+        double[][] b = new double[n + 1][1];
+        for (int i = 0; i < n + 1; i++) {
+            b[i][0] = g[i];
+        }
+        for (int i = 0; i < n + 1; i++) {
+            System.out.println(Arrays.toString(mat[i]));
+        }
+        double[][] m = (new Matrix(mat)).solve(new Matrix(b)).getArray();
+        for (int i = 0; i < n; i++) {
+            for (double x = points[i].x; x <= points[i + 1].x; x += 0.2) {
+                double p1 = points[i].y * Math.pow(x - points[i + 1].x, 2) * (h[i] + 2 * (x - points[i].x)) / Math.pow(h[i], 3);
+                double p2 = points[i + 1].y * Math.pow(x - points[i].x, 2) * (h[i] + 2 * (points[i + 1].x - x)) / Math.pow(h[i], 3);
+                double p3 = m[i][0] * Math.pow(x - points[i + 1].x, 2) * (x - points[i].x) / Math.pow(h[i], 2);
+                double p4 = m[i + 1][0] * Math.pow(x - points[i].x, 2) * (x - points[i + 1].x) / Math.pow(h[i], 2);
+                double y = p1 + p2 + p3 + p4;
+                if (this.drawPixel(new Point((int) x, (int) y)))
+                    return true;
+            }
+        }
+        /*double[][] mat = new double[n + 1][n + 1];
+        for (int i = 0; i < n + 1; i++)
+            for (int j = 0; j < n + 1; j++)
+                mat[i][j] = 0;
+        mat[0][0] = 2 * h[0];
+        mat[0][1] = h[0];
+        mat[n][n] = 2 * h[n - 1];
+        mat[n][n - 1] = h[n - 1];
+        for (int i = 1; i < n; i++) {
+            mat[i][i - 1] = h[i - 1];
+            mat[i][i] = 2 * (h[i - 1] + h[i]);
+            mat[i][i + 1] = h[i];
+        }
+        Matrix matrix = new Matrix(mat);
+        double[][] b = new double[n + 1][1];
+        b[0][0] = b[n][0] = 0;
+        for (int i = 1; i < n; i++) {
+            b[i][0] = 6 * ((points[i + 1].y - points[i].y) / h[i] - (points[i].y - points[i - 1].y) / h[i - 1]);
+        }
+        //double[][] m = matrix.inverse().times(new Matrix(b)).getArray();
+        double[][] m = matrix.solve(new Matrix(b)).getArray();
+        double[] aa = new double[n];
+        double[] bb = new double[n];
+        double[] cc = new double[n];
+        double[] dd = new double[n];
+        for (int i = 0; i < n; i++) {
+            aa[i] = points[i].y;
+            if (h[i] == 0)
+                bb[i] = 0.0;
+            else
+                bb[i] = (points[i + 1].y - points[i].y) / h[i] - h[i] * m[i][0] / 2.0 - h[i] * (m[i + 1][0] - m[i][0]) / 6.0;
+            cc[i] = m[i][0] / 2.0;
+            dd[i] = (m[i + 1][0] - m[i][0]) / (6.0 * h[i]);
+        }
+        for (int i = 0; i < n; i++) {
+            for (double x = points[i].x; x <= points[i + 1].x; x += 0.2) {
+                double deltaX = x - points[i].x;
+                double y = aa[i] + bb[i] * deltaX + cc[i] * Math.pow(deltaX, 2) + dd[i] * Math.pow(deltaX, 3);
+                this.drawPixel(new Point((int) x, (int) y));
+            }
+        }*/
         return false;
     }
 }

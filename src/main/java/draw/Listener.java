@@ -229,12 +229,12 @@ public class Listener extends MouseAdapter implements ActionListener {
                     if (mousePressedId != 0x7fffffff) {
                         try {
                             String pointInput = JOptionPane.showInputDialog("input the scale center x and y coordinate, separated by commas");
-                            String[] xy = pointInput.split("[,，]");
+                            String[] xy = pointInput.split(",");
                             String angleInput = JOptionPane.showInputDialog("input scale factor");
-                            int angle = (int) Double.parseDouble(angleInput);
+                            double angle = Double.parseDouble(angleInput);
                             int x = (int) Double.parseDouble(xy[0]);
                             int y = (int) Double.parseDouble(xy[1]);
-                            String command = String.format("scale %d %d %d %d", mousePressedId, x, y, angle);
+                            String command = String.format("scale %d %d %d %f", mousePressedId, x, y, angle);
                             //System.out.println(command);
                             cg.getCli().updateCli(command);
                         } catch (Exception ee) {

@@ -5,20 +5,10 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Frame frame = new Frame();
-        CG cg = new CG(frame);
-        cg.resetCanvas(800, 600);
+    private static Cli cli;
 
-        Cli cli = new Cli(cg);
-        // CliNetwork cn = new CliNetwork(cli);
-        // cn.start();
+    public static void parseFile(Scanner scanner) throws InterruptedException {
         String line;
-        Scanner scanner;
-        if (args.length != 0)
-            scanner = new Scanner(new File(args[0]));
-        else
-            scanner = new Scanner(System.in);
         System.out.print(">>> ");
         while (scanner.hasNext()) {
             line = scanner.nextLine();
@@ -39,6 +29,20 @@ public class Main {
             System.out.print(">>> ");
         }
         scanner.close();
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Frame frame = new Frame();
+        CG cg = new CG(frame);
+        cg.resetCanvas(800, 600);
+        cli = new Cli(cg);
+        String line;
+        Scanner scanner;
+        if (args.length != 0)
+            scanner = new Scanner(new File(args[0]));
+        else
+            scanner = new Scanner(System.in);
+        parseFile(scanner);
     }
 
 }

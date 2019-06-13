@@ -4,8 +4,11 @@ package draw;
 import Jama.Matrix;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 class Cli {
     HashMap<Integer, Matrix> rotateMsg;
@@ -367,6 +370,21 @@ class Cli {
                 }
                 this.redraw();
                 break;
+            }
+            case "file": {
+                if (command.length != 2)
+                    return false;
+                try {
+                    Scanner scanner = new Scanner(new File(command[1]));
+                    Main.parseFile(scanner);
+                } catch (FileNotFoundException e) {
+                    errInfo = "file:\nfile " + command[1] + " not exists!\n";
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            case "exit": {
+                System.exit(0);
             }
             default: {
                 return false;

@@ -1,0 +1,18 @@
+resetCanvas 500 500
+setColor 255 0 0
+drawLine 5 70 39 459 480 Bresenham
+saveCanvas output_1
+setColor 0 162 232
+drawLine 233 96 35 495 201 DDA
+saveCanvas output_2
+rotate 233 33 49 -45
+saveCanvas output_3
+drawEllipse 123 310 249 38 28
+setColor 0 0 0
+drawPolygon 666 6 Bresenham
+244 222 273 230 274 277 259 256 232 263 225 249
+saveCanvas output_4
+rotate 666 259 256 90
+translate 666 -8 -18
+saveCanvas output_5
+exit

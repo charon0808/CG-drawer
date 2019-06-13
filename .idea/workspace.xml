@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="959b2e49-2b17-40f7-b574-8899a989d820" name="Default Changelist" comment="add clip line by Cohen-Sutherland and algorithm">
+    <list default="true" id="959b2e49-2b17-40f7-b574-8899a989d820" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/draw/CG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/CG.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/draw/Cli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Cli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/draw/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Frame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/draw/CliNetwork.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/draw/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Listener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/draw/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/draw/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/CG.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/CG.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Cli.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Cli.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/CliNetwork.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/ClipWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/ClipWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Frame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Frame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/draw/dPoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/draw/dPoint.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -21,26 +31,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="84" column="19" selection-start-line="84" selection-start-column="19" selection-end-line="84" selection-end-column="19" />
+            <state relative-caret-position="227">
+              <caret line="644" column="40" selection-start-line="644" selection-start-column="40" selection-end-line="644" selection-end-column="40" />
+              <folding>
+                <element signature="e#919#920#0" expanded="true" />
+                <element signature="e#23042#23043#0" expanded="true" />
+                <element signature="e#23099#23100#0" expanded="true" />
+                <element signature="e#23134#23135#0" expanded="true" />
+                <element signature="e#23197#23198#0" expanded="true" />
+                <element signature="e#23220#23221#0" expanded="true" />
+                <element signature="e#23280#23281#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9671">
-              <caret line="21" column="25" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="25" />
-              <folding>
-                <element signature="e#19752#19753#0" expanded="true" />
-                <element signature="e#19809#19810#0" expanded="true" />
-                <element signature="e#19844#19845#0" expanded="true" />
-                <element signature="e#19907#19908#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="207">
+              <caret line="232" column="51" selection-start-line="232" selection-start-column="51" selection-end-line="232" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -48,20 +61,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Cli.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="228" column="50" lean-forward="true" selection-start-line="228" selection-start-column="50" selection-end-line="228" selection-end-column="50" />
-              <folding>
-                <element signature="e#16638#16639#0" expanded="true" />
-                <element signature="e#16666#16667#0" expanded="true" />
-                <element signature="e#16695#16696#0" expanded="true" />
-                <element signature="e#16723#16724#0" expanded="true" />
-                <element signature="e#16752#16753#0" expanded="true" />
-                <element signature="e#16780#16781#0" expanded="true" />
-                <element signature="e#16809#16810#0" expanded="true" />
-                <element signature="e#16837#16838#0" expanded="true" />
-                <element signature="e#16873#16874#0" expanded="true" />
-                <element signature="e#16905#16906#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="397">
+              <caret line="342" column="51" lean-forward="true" selection-start-line="342" selection-start-column="51" selection-end-line="342" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -69,17 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="143" column="47" lean-forward="true" selection-start-line="143" selection-start-column="47" selection-end-line="143" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="262" column="34" lean-forward="true" selection-start-line="262" selection-start-column="34" selection-end-line="262" selection-end-column="34" />
+            <state relative-caret-position="437">
+              <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -87,8 +79,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/draw/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="36" column="22" lean-forward="true" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+            <state relative-caret-position="684">
+              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -103,6 +95,8 @@
       <find>edge</find>
       <find>shapesPut</find>
       <find>System</find>
+      <find>BSpl</find>
+      <find>exit</find>
     </findStrings>
     <replaceStrings>
       <replace>b.x</replace>
@@ -121,11 +115,12 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/draw/Main.java" />
-        <option value="$PROJECT_DIR$/src/main/java/draw/CG.java" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Frame.java" />
+        <option value="$PROJECT_DIR$/src/main/java/draw/CliNetwork.java" />
+        <option value="$PROJECT_DIR$/src/main/java/draw/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Cli.java" />
         <option value="$PROJECT_DIR$/src/main/java/draw/Listener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/draw/CG.java" />
       </list>
     </option>
   </component>
@@ -137,10 +132,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="380" />
-    <option name="y" value="50" />
-    <option name="width" value="1774" />
-    <option name="height" value="1275" />
+    <option name="x" value="370" />
+    <option name="y" value="40" />
+    <option name="width" value="1784" />
+    <option name="height" value="1285" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -148,54 +143,45 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
+              <item name="CG-Drawer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CG-Drawer" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
+              <item name="CG-Drawer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CG-Drawer" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
+              <item name="CG-Drawer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CG-Drawer" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
+              <item name="CG-Drawer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CG-Drawer" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="draw" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="CG-drawer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CG-drawer" type="462c0819:PsiDirectoryNode" />
+              <item name="CG-Drawer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CG-Drawer" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="draw" type="462c0819:PsiDirectoryNode" />
-              <item name="CG.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -225,7 +211,7 @@
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="draw.Main" />
-      <module name="xli" />
+      <module name="CG-Drawer" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="draw.*" />
@@ -295,6 +281,8 @@
       <workItem from="1558761096973" duration="14341000" />
       <workItem from="1558837376234" duration="7590000" />
       <workItem from="1559970023904" duration="2961000" />
+      <workItem from="1560407534216" duration="4000000" />
+      <workItem from="1560422760497" duration="11166000" />
     </task>
     <task id="LOCAL-00001" summary="using maven">
       <created>1557036193755</created>
@@ -356,14 +344,14 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="86462000" />
+    <option name="totallyTimeSpent" value="104950000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1563" height="854" extended-state="6" />
+    <frame x="-7" y="-7" width="2080" height="1144" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49420848" visible="true" weight="0.17408638" />
-      <window_info id="Structure" order="1" sideWeight="0.5057915" side_tool="true" visible="true" weight="0.17408638" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6035132" visible="true" weight="0.13748764" />
+      <window_info id="Structure" order="1" sideWeight="0.39648682" side_tool="true" visible="true" weight="0.13748764" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -371,7 +359,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49966776" weight="0.41274238" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49833888" visible="true" weight="0.2825485" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49833888" visible="true" weight="0.2124506" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.25484765" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -438,72 +426,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/CliNetwork.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JComponent.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/io/FileOutputStream.java" />
+    <entry file="file://$PROJECT_DIR$/draw.suml" />
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="37" column="44" lean-forward="true" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+        <state relative-caret-position="566">
+          <caret line="65" column="39" selection-start-line="65" selection-start-column="39" selection-end-line="65" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JComponent.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/io/FileOutputStream.java" />
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/CliNetwork.java" />
+    <entry file="file://$PROJECT_DIR$/output_6.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_7.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_2.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_5.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_4.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_3.bmp">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="84" column="19" selection-start-line="84" selection-start-column="19" selection-end-line="84" selection-end-column="19" />
+        <state relative-caret-position="437">
+          <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/draw/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="36" column="22" lean-forward="true" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9671">
-          <caret line="21" column="25" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="25" />
-          <folding>
-            <element signature="e#19752#19753#0" expanded="true" />
-            <element signature="e#19809#19810#0" expanded="true" />
-            <element signature="e#19844#19845#0" expanded="true" />
-            <element signature="e#19907#19908#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Cli.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="228" column="50" lean-forward="true" selection-start-line="228" selection-start-column="50" selection-end-line="228" selection-end-column="50" />
-          <folding>
-            <element signature="e#16638#16639#0" expanded="true" />
-            <element signature="e#16666#16667#0" expanded="true" />
-            <element signature="e#16695#16696#0" expanded="true" />
-            <element signature="e#16723#16724#0" expanded="true" />
-            <element signature="e#16752#16753#0" expanded="true" />
-            <element signature="e#16780#16781#0" expanded="true" />
-            <element signature="e#16809#16810#0" expanded="true" />
-            <element signature="e#16837#16838#0" expanded="true" />
-            <element signature="e#16873#16874#0" expanded="true" />
-            <element signature="e#16905#16906#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Frame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="143" column="47" lean-forward="true" selection-start-line="143" selection-start-column="47" selection-end-line="143" selection-end-column="47" />
+        <state relative-caret-position="684">
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/draw/Listener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="262" column="34" lean-forward="true" selection-start-line="262" selection-start-column="34" selection-end-line="262" selection-end-column="34" />
+        <state relative-caret-position="207">
+          <caret line="232" column="51" selection-start-line="232" selection-start-column="51" selection-end-line="232" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/Cli.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="342" column="51" lean-forward="true" selection-start-line="342" selection-start-column="51" selection-end-line="342" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/draw/CG.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="644" column="40" selection-start-line="644" selection-start-column="40" selection-end-line="644" selection-end-column="40" />
+          <folding>
+            <element signature="e#919#920#0" expanded="true" />
+            <element signature="e#23042#23043#0" expanded="true" />
+            <element signature="e#23099#23100#0" expanded="true" />
+            <element signature="e#23134#23135#0" expanded="true" />
+            <element signature="e#23197#23198#0" expanded="true" />
+            <element signature="e#23220#23221#0" expanded="true" />
+            <element signature="e#23280#23281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
